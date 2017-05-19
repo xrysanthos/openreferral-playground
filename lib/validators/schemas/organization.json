@@ -1,0 +1,89 @@
+{
+  "fields": [{
+      "name": "id",
+      "type": "string",
+      "description": "Each organization must have a unique identifier.",
+      "format": "uuid",
+      "constraints": {
+        "required": true,
+        "unique": true
+      }
+    },
+    {
+      "name": "name",
+      "type": "string",
+      "description": "The official or public name of the organization.",
+      "constraints": {
+        "required": true
+      }
+    },
+    {
+      "name": "alternate_name",
+      "type": "string",
+      "description": "Alternative or commonly used name for the organization.",
+      "constraints": {
+        "required": false
+      }
+    },
+    {
+      "name": "description",
+      "type": "string",
+      "description": "A brief summary about the organization. It can contain markup such as HTML or Markdown.",
+      "constraints": {
+        "required": true
+      }
+    },
+    {
+      "name": "email",
+      "type": "string",
+      "description": "The contact e-mail address for the organization.",
+      "format": "email",
+      "constraints": {
+        "required": false
+      }
+    },
+    {
+      "name": "url",
+      "type": "string",
+      "format": "uri",
+      "description": "The URL (website address) of the organization.",
+      "constraints": {
+        "required": false
+      }
+    },
+    {
+      "name": "tax_status",
+      "type": "string",
+      "description": "Government assigned tax designation for for tax-exempt organizations.",
+      "constraints": {
+        "required": false
+      }
+    },
+    {
+      "name": "tax_id",
+      "type": "string",
+      "description": "A government issued identifier used for the purpose of tax administration.",
+      "constraints": {
+        "required": false
+      }
+    },
+    {
+      "name": "year_incorporated",
+      "format": "default",
+      "type": "date",
+      "description": "The year in which the organization was legally formed.",
+      "constraints": {
+        "required": false
+      }
+    },
+    {
+      "name": "legal_status",
+      "type": "string",
+      "description": "The legal status defines the conditions that an organization is operating under; e.g. non-profit, private corporation or a government organization.",
+      "constraints": {
+        "required": false
+      }
+    }
+  ],
+  "primaryKey": ["id"]
+}

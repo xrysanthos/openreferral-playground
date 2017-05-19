@@ -1,0 +1,12 @@
+{
+  "paths": {
+    "src": ["server.js", "stories/**/*.js"],
+    "test": ["test/**/*test.js"]
+  },
+  "eslint": {
+    "failOnError": true
+  },
+  "mocha": {
+    "timeout": 5000
+  }
+}

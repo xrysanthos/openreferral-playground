@@ -1,0 +1,18 @@
+{
+
+  "apis": {
+    "metrics": "http://qa.traefik-lb.akazoo.corp/api/events/metrics"
+  },
+
+  "mongo": {
+    "uri": "mongodb://grvd-akz-dashboard/akz-campaign-tracking"
+  },
+
+  "gateways": {
+    "infobip": {
+      "token": "QWthem9vOkFrMzg0Wm9v",
+      "scenario": "F20DF3BB9E135D3459E4DCC9AD7FFF1A"
+    }
+  }
+
+}

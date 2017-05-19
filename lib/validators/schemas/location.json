@@ -1,0 +1,59 @@
+{
+
+  "fields": [{
+      "name": "id",
+      "description": "Each location must have a unique identifier",
+      "type": "string",
+      "constraints": {
+        "required": true
+      }
+    },
+    {
+      "name": "organization_id",
+      "description": "Each location entry should be linked to a single organization. This is the organization that is responsible for maintaining information about this location. The identifier of the organization should be given here. Details of the services the organisation delivers at this location should be provided in the services_at_location table.",
+      "type": "string"
+    },
+    {
+      "name": "name",
+      "description": "The name of the location",
+      "type": "string"
+    },
+    {
+      "name": "alternate_name",
+      "description": "An alternative name for the location",
+      "type": "string"
+    },
+    {
+      "name": "description",
+      "description": "A description of this location.",
+      "type": "string",
+      "constraints": {
+        "required": false
+      }
+    },
+    {
+      "name": "transportation",
+      "description": "A description of the access to public or private transportation to and from the location.",
+      "type": "string"
+    },
+    {
+      "name": "latitude",
+      "description": "Y coordinate of location expressed in decimal degrees in WGS84 datum.",
+      "type": "number"
+    },
+    {
+      "name": "longitude",
+      "description": "X coordinate of location expressed in decimal degrees in WGS84 datum.",
+      "type": "number"
+    }
+  ],
+  "primaryKey": ["id"],
+
+  "foreignKeys": [{
+    "fields": ["organization_id"],
+    "reference": {
+      "resource": "organization",
+      "fields": ["id"]
+    }
+  }]
+}

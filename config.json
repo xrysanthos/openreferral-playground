@@ -1,0 +1,13 @@
+{
+
+  "logging": {
+    "console": {
+      "level": "info"
+    }
+  },
+
+  "server": {
+    "host": "localhost",
+    "port": 8080
+  }
+}
