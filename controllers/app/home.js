@@ -64,7 +64,7 @@ module.exports = function(server) {
     path: '/static/{param*}',
     handler: {
       directory: {
-        path: path.join(__dirname, '../static')
+        path: path.join(__dirname, '../../static')
       }
     }
   });

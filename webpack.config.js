@@ -6,11 +6,17 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 let webpackConfig = {
 
-  entry: './static/js/app/index.js',
+  context: path.resolve(__dirname, 'js'),
+
+  entry: {
+    base: './app/base.js',
+    'validators-resource': './app/features/validators/resource.js',
+    'validators-datapackage': './app/features/validators/datapackage.js'
+  },
 
   output: {
-    filename: 'bundle.js',
-    path: path.resolve(__dirname, 'static/dist/')
+    path: path.resolve(__dirname, 'static/dist/'),
+    filename: '[name].bundle.js'
   },
 
   devServer: {
@@ -19,7 +25,14 @@ let webpackConfig = {
   },
 
   plugins: [
-    new ExtractTextPlugin('styles.css')
+
+    new ExtractTextPlugin('styles.css'),
+
+    new webpack.ProvidePlugin({
+      jQuery: 'jquery',
+      $: 'jquery',
+      jquery: 'jquery'
+    })
   ]
 
 
@@ -33,28 +46,26 @@ let webpackConfig = {
 webpackConfig = merge(webpackConfig, {
   module: {
     rules: [{
-        test: /\.css$/,
-        use: ExtractTextPlugin.extract({
-          use: 'css-loader'
-        })
-      },
-      {
-        test: /\.(png|svg|jpg|gif)$/,
-        use: [
-          'file-loader'
-        ]
-      },
-      {
-        test: /\.(woff|woff2|eot|ttf|otf)$/,
-        use: [
-          'file-loader'
-        ]
-      }
+      test: /\.css$/,
+      use: ExtractTextPlugin.extract({
+        use: 'css-loader'
+      })
+    },
+    {
+      test: /\.(png|svg|jpg|gif)$/,
+      use: [
+        'file-loader'
+      ]
+    },
+    {
+      test: /\.(woff|woff2|eot|ttf|otf)$/,
+      use: [
+        'file-loader'
+      ]
+    }
     ]
   }
 });
-
-
 
 
 module.exports = webpackConfig;

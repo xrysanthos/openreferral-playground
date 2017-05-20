@@ -1,0 +1,65 @@
+<h1 class="ui header">
+  Validate resources
+  <div class="sub header">
+    Validate Open Referral resources
+    individually against the official
+    specification.
+  </div>
+</h1>
+
+
+<div class="ui menu">
+  <a class="browse item">
+    Select a resource
+    <i class="dropdown icon"></i>
+  </a>
+  <div class="ui fluid popup bottom left transition hidden resources">
+    <div class="ui three column relaxed divided grid">
+      <div class="column">
+        <div class="ui link list">
+          {{#each resources.[0]}}
+          <a class="item resource" title="{{this.description}}">{{this.title}}</a>
+          {{/each}}
+        </div>
+      </div>
+      <div class="column">
+        <div class="ui link list">
+          {{#each resources.[1]}}
+          <a class="item resource" title="{{this.description}}">{{this.title}}</a>
+          {{/each}}
+        </div>
+      </div>
+      <div class="column">
+        <div class="ui link list">
+          {{#each resources.[2]}}
+          <a class="item resource" title="{{this.description}}">{{this.title}}</a>
+          {{/each}}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="right menu">
+    <div class="item">
+      <div class="ui transparent icon input">
+        <input type="text" placeholder="Search...">
+        <i class="search link icon"></i>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="ui top attached segment">
+  <img class="ui wireframe image" src="/static/assets/images/paragraph.png">
+</div>
+<div class="ui bottom attached tabular menu">
+  <a class="item active">
+        Definition
+      </a>
+  <a class="item">
+        Schema
+      </a>
+</div>
+
+
+<script src="/static/dist/validators-resource.bundle.js"></script>
