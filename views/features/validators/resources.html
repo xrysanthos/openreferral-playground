@@ -18,22 +18,19 @@
       <div class="column">
         <div class="ui link list">
           {{#each resources.[0]}}
-          <a class="item resource" title="{{this.description}}">{{this.title}}</a>
-          {{/each}}
+          <a class="item resource" data-name="{{this.name}}" title="{{this.description}}">{{this.title}}</a> {{/each}}
         </div>
       </div>
       <div class="column">
         <div class="ui link list">
           {{#each resources.[1]}}
-          <a class="item resource" title="{{this.description}}">{{this.title}}</a>
-          {{/each}}
+          <a class="item resource" data-name="{{this.name}}" title="{{this.description}}">{{this.title}}</a> {{/each}}
         </div>
       </div>
       <div class="column">
         <div class="ui link list">
           {{#each resources.[2]}}
-          <a class="item resource" title="{{this.description}}">{{this.title}}</a>
-          {{/each}}
+          <a class="item resource" data-name="{{this.name}}" title="{{this.description}}">{{this.title}}</a> {{/each}}
         </div>
       </div>
     </div>
@@ -49,17 +46,15 @@
   </div>
 </div>
 
-<div class="ui top attached segment">
-  <img class="ui wireframe image" src="/static/assets/images/paragraph.png">
-</div>
-<div class="ui bottom attached tabular menu">
+<div class="ui top attached tabular menu">
   <a class="item active">
-        Definition
-      </a>
-  <a class="item">
         Schema
       </a>
 </div>
+<div class="ui bottom attached segment resource-contents">
+  <img class="ui wireframe image" src="/static/assets/images/paragraph.png">
+</div>
+
 
 
 <script src="/static/dist/validators-resource.bundle.js"></script>

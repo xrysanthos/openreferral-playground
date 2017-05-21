@@ -4,7 +4,8 @@
  */
 
 const api = {
-  'get resources': '/api/resources'
+  'get resources': '/api/resources',
+  'get resource': '/api/resources/{name}'
 };
 
 

@@ -1,0 +1,40 @@
+<h3 class="ui header">{{this.title}}</h3>
+<p>{{this.description}}</p>
+
+<table class="ui definition table">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Type</th>
+      <th>Description</th>
+      <th>Format</th>
+      <th>Required</th>
+      <th>Unique</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each this.schema.fields}}
+    <tr>
+      <td>{{this.name}}</td>
+      <td><div class="ui horizontal label">{{this.type}}</div></td>
+      <td>{{this.description}}</td>
+      <td>
+        {{#if this.format}}
+        <div class="ui purple horizontal label">{{this.format}}</div>
+        {{/if}}
+      </td>
+      <td class="center aligned">
+        {{#if this.constraints.required}}
+        <i class="large green checkmark icon"></i>
+        {{/if}}
+      </td>
+      <td class="center aligned">
+        {{#if this.constraints.unique}}
+        <i class="large green checkmark icon"></i>
+        {{/if}}
+      </td>
+    </tr>
+    {{/each}}
+
+  </tbody>
+</table>

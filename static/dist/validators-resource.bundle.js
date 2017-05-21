@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 6);
+/******/ 	return __webpack_require__(__webpack_require__.s = 7);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -10332,13 +10332,13 @@ return jQuery;
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_semantic_ui_css_semantic_min_css__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_semantic_ui_css_semantic_min_css__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_semantic_ui_css_semantic_min_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_semantic_ui_css_semantic_min_css__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__static_css_app_css__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__static_css_app_css__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__static_css_app_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__static_css_app_css__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_semantic_ui_css_semantic_min_js__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_semantic_ui_css_semantic_min_js__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_semantic_ui_css_semantic_min_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_semantic_ui_css_semantic_min_js__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__api__ = __webpack_require__(14);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__api__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__api___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__api__);
 
 
@@ -10351,9 +10351,22 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 /***/ }),
 /* 2 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-// removed by extract-text-webpack-plugin
+/* WEBPACK VAR INJECTION */(function($) {/**
+ * API mappings
+ * @type {Object}
+ */
+
+const api = {
+  'get resources': '/api/resources',
+  'get resource': '/api/resources/{name}'
+};
+
+
+$.fn.api.settings.api = api;
+
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
 /* 3 */
@@ -10363,6 +10376,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 /***/ }),
 /* 4 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(jQuery) { /*
@@ -10387,8 +10406,8 @@ if(n.refresh(),e.fn.api!==i)if(t=C.api("get request"),o=C.api("was cancelled"))n
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 5 */,
-/* 6 */
+/* 6 */,
+/* 7 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -10404,7 +10423,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
    */
   const onReady = function() {
 
-  // selector cache
+    // selector cache
     const
       $dropdownItem = $('.menu .dropdown .item'),
       $popupItem = $('.popup.example .browse.item'),
@@ -10412,43 +10431,54 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       $dropdown = $('.menu .ui.dropdown');
 
     $dropdown
-    .dropdown({
-      on: 'hover'
-    });
+      .dropdown({
+        on: 'hover'
+      });
 
     $('.main.container .ui.search')
-    .search({
-      type: 'category',
-      apiSettings: {
-        action: 'categorySearch'
-      }
-    });
+      .search({
+        type: 'category',
+        apiSettings: {
+          action: 'categorySearch'
+        }
+      });
 
     $('.browse.item')
-    .popup({
-      popup: '.resources.popup',
-      hoverable: true,
-      position: 'bottom left',
-      delay: {
-        show: 200,
-        hide: 400
-      }
-    });
+      .popup({
+        popup: '.resources.popup',
+        hoverable: true,
+        position: 'bottom left',
+        delay: {
+          show: 200,
+          hide: 400
+        }
+      });
 
     $popupItem
-    .popup({
-      inline: true,
-      hoverable: true,
-      popup: '.fluid.popup',
-      position: 'bottom left',
-      delay: {
-        show: 300,
-        hide: 800
-      }
-    });
+      .popup({
+        inline: true,
+        hoverable: true,
+        popup: '.fluid.popup',
+        position: 'bottom left',
+        delay: {
+          show: 100,
+          hide: 100
+        }
+      });
 
     $menuItem
-    .on('click', onResourceSelected);
+      .on('click', onResourceSelected);
+
+    $('.link.list .item').api({
+      action: 'get resource',
+      urlData: {
+        name: $(this).attr('data-name')
+      },
+      dataType: 'html',
+      onSuccess(response) {
+        $('.ui.resource-contents').html(response);
+      }
+    });
 
   };
 
@@ -10458,50 +10488,24 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
    */
   const onResourceSelected = function() {
 
-    console.log('click');
     if (!$(this).hasClass('dropdown browse')) {
       $(this)
-      .addClass('active')
-      .closest('.ui.menu')
-      .find('.item')
-      .not($(this))
-      .removeClass('active');
+        .addClass('active')
+        .closest('.ui.menu')
+        .find('.item')
+        .not($(this))
+        .removeClass('active');
     }
   };
 
 
   // attach ready event
   $(document)
-  .ready(onReady);
+    .ready(onReady);
 
 }
 
 /* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(0)))
-
-/***/ }),
-/* 7 */,
-/* 8 */,
-/* 9 */,
-/* 10 */,
-/* 11 */,
-/* 12 */,
-/* 13 */,
-/* 14 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/* WEBPACK VAR INJECTION */(function($) {/**
- * API mappings
- * @type {Object}
- */
-
-const api = {
-  'get resources': '/api/resources'
-};
-
-
-$.fn.api.settings.api = api;
-
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ })
 /******/ ]);

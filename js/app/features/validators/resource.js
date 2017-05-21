@@ -8,7 +8,7 @@ import '../../base';
    */
   const onReady = function() {
 
-  // selector cache
+    // selector cache
     const
       $dropdownItem = $('.menu .dropdown .item'),
       $popupItem = $('.popup.example .browse.item'),
@@ -16,43 +16,54 @@ import '../../base';
       $dropdown = $('.menu .ui.dropdown');
 
     $dropdown
-    .dropdown({
-      on: 'hover'
-    });
+      .dropdown({
+        on: 'hover'
+      });
 
     $('.main.container .ui.search')
-    .search({
-      type: 'category',
-      apiSettings: {
-        action: 'categorySearch'
-      }
-    });
+      .search({
+        type: 'category',
+        apiSettings: {
+          action: 'categorySearch'
+        }
+      });
 
     $('.browse.item')
-    .popup({
-      popup: '.resources.popup',
-      hoverable: true,
-      position: 'bottom left',
-      delay: {
-        show: 200,
-        hide: 400
-      }
-    });
+      .popup({
+        popup: '.resources.popup',
+        hoverable: true,
+        position: 'bottom left',
+        delay: {
+          show: 200,
+          hide: 400
+        }
+      });
 
     $popupItem
-    .popup({
-      inline: true,
-      hoverable: true,
-      popup: '.fluid.popup',
-      position: 'bottom left',
-      delay: {
-        show: 300,
-        hide: 800
-      }
-    });
+      .popup({
+        inline: true,
+        hoverable: true,
+        popup: '.fluid.popup',
+        position: 'bottom left',
+        delay: {
+          show: 100,
+          hide: 100
+        }
+      });
 
     $menuItem
-    .on('click', onResourceSelected);
+      .on('click', onResourceSelected);
+
+    $('.link.list .item').api({
+      action: 'get resource',
+      urlData: {
+        name: $(this).attr('data-name')
+      },
+      dataType: 'html',
+      onSuccess(response) {
+        $('.ui.resource-contents').html(response);
+      }
+    });
 
   };
 
@@ -64,17 +75,17 @@ import '../../base';
 
     if (!$(this).hasClass('dropdown browse')) {
       $(this)
-      .addClass('active')
-      .closest('.ui.menu')
-      .find('.item')
-      .not($(this))
-      .removeClass('active');
+        .addClass('active')
+        .closest('.ui.menu')
+        .find('.item')
+        .not($(this))
+        .removeClass('active');
     }
   };
 
 
   // attach ready event
   $(document)
-  .ready(onReady);
+    .ready(onReady);
 
 }
