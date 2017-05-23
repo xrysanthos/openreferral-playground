@@ -20,7 +20,7 @@
     "lodash": "^4.17.4",
     "nconf": "latest",
     "recursive-readdir": "^2.1.1",
-    "tableschema": "^1.0.0-alpha.6",
+    "tableschema": "^1.0.0-alpha.7",
     "unirest": "latest",
     "vision": "latest",
     "winston": "latest"

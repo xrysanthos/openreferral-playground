@@ -1,3 +1,5 @@
+const fs = require('fs');
+const path = require('path');
 const chai = require('chai');
 const should = chai.should();
 const chaiAsPromised = require('chai-as-promised');
@@ -29,9 +31,7 @@ context('Validator', () => {
       const v = new Validator('organization');
       should.exist(v.schema);
     });
-
   });
-
 
   context('validate()', () => {
 
@@ -41,64 +41,44 @@ context('Validator', () => {
       return p.should.be.rejected;
     });
 
-    it.only('should through an error if dataset is not an array', () => {
-
+    it('should read data from an array of values', () => {
       const data = [
-        ['30b83c60-64a1-11e6-8b77-86f30ca893d1',
-          'Name',
-          'Alternate name',
-          'Description',
-          'org@example.com',
-          'http://org.example.com',
-          'Tax status',
-          'Tax ID',
-          '1990-01-01',
-          'Legal status'
-        ],
-        ['30b83c60-64a1-11e6-8b77-86f30ca893d2',
-          'Name',
-          'Alternate name',
-          'Description',
-          'org@example.com',
-          'http://org.example.com',
-          'Tax status',
-          'Tax ID',
-          '1990-01-01',
-          'Legal status'
-        ],
-        ['30b83c60-64a1-11e6-8b77-86f30ca893d3',
-          'Name',
-          'Alternate name',
-          'Description',
-          'org@example.com',
-          'http://org.example.com',
-          'Tax status',
-          'Tax ID',
-          '1990-01-01',
-          'Legal status'
-        ],
-        ['30b83c60-64a1-11e6-8b77-86f30ca893d4',
-          'Name',
-          'Alternate name',
-          'Description',
-          'org@example.com',
-          'http://org.example.com',
-          'Tax status',
-          'Tax ID',
-          '1990-01-01',
-          'Legal status'
+        [
+          '1',
+          'c89eb05c-62dd-4b64-b494-0cc347b6ea7f',
+          'Program name',
+          'Alternate name'
         ]
       ];
 
       // validate the source against the schema
-      const p = new Validator('organization').validate(data);
-
-      return p.then().catch(err => {
-        console.log(err.row, err.errors);
-      });
-      // return p.should.be.resolved;
-
+      const p = new Validator('program').validate(data);
+      return p.should.be.resolved;
     });
+
+    it('should read data from a local CSV', () => {
+      const file = path.resolve(__dirname, 'data/program.csv');
+      const stream = fs.createReadStream(file);
+
+      // validate the source against the schema
+      const p = new Validator('program').validate(stream);
+      return p.should.be.resolved;
+    });
+
+  });
+
+  context('Validate all registered resource types', () => {
+
+    it.only('should validate all resources', () => {
+
+      const file = path.resolve(__dirname, 'data/meta_table_description.csv');
+      const stream = fs.createReadStream(file);
+
+      // validate the source against the schema
+      const p = new Validator('meta_table_description').validate(stream);
+      return p.should.be.resolved;
+    });
+
 
   });
 

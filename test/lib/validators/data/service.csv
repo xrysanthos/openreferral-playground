@@ -1,0 +1,2 @@
+id,organization_id,program_id,name,alternate_name,description,url,email,status,interpretation_services,application_process,wait_time,fees,accrediations,licenses,taxonomy_ids
+1,aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaa1,1,service A,alternate name for service A,service description,http://service.example.com,service@example.com,active,interpretation services,application process,1 day,fees,accrediations,licenses,unused
