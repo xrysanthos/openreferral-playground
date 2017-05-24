@@ -1,5 +1,6 @@
 import '../../base';
 
+
 {
 
   /**
@@ -65,6 +66,15 @@ import '../../base';
       }
     });
 
+    // initialize the tab
+    $('.menu .item')
+      .tab();
+
+    const opts = {
+      url: '/validators/validate',
+      acceptedFiles: '.csv'
+    };
+    $('#csv-upload').dropzone(opts);
   };
 
   /**

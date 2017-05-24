@@ -36,25 +36,37 @@
     </div>
   </div>
 
-  <div class="right menu">
-    <div class="item">
-      <div class="ui transparent icon input">
-        <input type="text" placeholder="Search...">
-        <i class="search link icon"></i>
-      </div>
-    </div>
-  </div>
+
 </div>
+
 
 <div class="ui top attached tabular menu">
-  <a class="item active">
-        Schema
-      </a>
+  <a class="item active" data-tab="schema">Schema</a>
+  <a class="item" data-tab="csv">CSV validation</a>
 </div>
-<div class="ui bottom attached segment resource-contents">
+<div class="ui bottom attached tab segment active resource-contents" data-tab="schema">
   <img class="ui wireframe image" src="/static/assets/images/paragraph.png">
 </div>
+<div class="ui bottom attached tab segment" data-tab="csv">
 
+  <div class="ui">
+    <form action="/upload" class="dropzone" id="csv-upload">
+
+      <div class="dz-message needsclick">
+        <h2 class="ui center aligned icon header">
+          <i class="circular icon upload"></i>
+          Drop a sample CSV in here
+        </h2>
+
+        <img class="ui wireframe image centered" src="/static/assets/images/short-paragraph.png">
+
+      </div>
+    </form>
+
+  </div>
+
+
+</div>
 
 
 <script src="/static/dist/validators-resource.bundle.js"></script>

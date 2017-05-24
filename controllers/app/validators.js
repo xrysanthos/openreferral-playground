@@ -5,7 +5,9 @@
  */
 
 const _ = require('lodash');
+const fs = require('fs');
 const Resources = require('../../lib/validators/resources').Resources;
+const Validator = require('../../lib/validators/validator').Validator;
 
 module.exports = function(server) {
 
@@ -36,8 +38,37 @@ module.exports = function(server) {
           resources: chunks
         };
 
-
         return reply.view('features/validators/resources', model);
+      }
+    }
+  });
+
+  server.route({
+    path: '/validators/validate',
+    method: 'POST',
+    config: {
+
+      payload: {
+        output: 'stream',
+        parse: true,
+        allow: 'multipart/form-data'
+      },
+
+      handler(request, reply) {
+
+        const stream = request.payload.file;
+
+        const p = new Validator('contact').validate(stream)
+          .then(() => {
+            console.log('success');
+            reply();
+          })
+          .catch((e) => {
+            console.error(e.message);
+            reply(e);
+          });
+
+
       }
     }
   });

@@ -31,7 +31,8 @@ let webpackConfig = {
     new webpack.ProvidePlugin({
       jQuery: 'jquery',
       $: 'jquery',
-      jquery: 'jquery'
+      jquery: 'jquery',
+      Dropzone: 'dropzone'
     })
   ]
 

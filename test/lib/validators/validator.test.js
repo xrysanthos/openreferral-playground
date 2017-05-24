@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const async = require('async');
 const chai = require('chai');
 const should = chai.should();
 const chaiAsPromised = require('chai-as-promised');
@@ -11,8 +12,11 @@ const {
 } = require('../../../lib/validators/validator');
 
 const {
-  UnsupportedValidatorError,
-  DataValidationError
+  Resources
+} = require('../../../lib/validators/resources');
+
+const {
+  UnsupportedValidatorError
 } = require('../../../lib/validators/errors');
 
 
@@ -65,21 +69,27 @@ context('Validator', () => {
       return p.should.be.resolved;
     });
 
-  });
+    it('should validate all resource types against the sample CSVs', (done) => {
 
-  context('Validate all registered resource types', () => {
+      // get the available resource types
+      const types = Resources.types;
 
-    it.only('should validate all resources', () => {
+      // go through the list
+      async.map(types, (type, done) => {
+        const file = path.resolve(__dirname, `data/${type}.csv`);
+        const stream = fs.createReadStream(file);
 
-      const file = path.resolve(__dirname, 'data/meta_table_description.csv');
-      const stream = fs.createReadStream(file);
+        // validate the source against the schema
+        const p = new Validator(type).validate(stream);
+        p.then(() => done()).catch((err) => done(err));
+      }, (err) => {
 
-      // validate the source against the schema
-      const p = new Validator('meta_table_description').validate(stream);
-      return p.should.be.resolved;
+        done(err);
+      });
+
     });
 
-
   });
+
 
 });

@@ -10332,14 +10332,18 @@ return jQuery;
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_semantic_ui_css_semantic_min_css__ = __webpack_require__(3);
+/* WEBPACK VAR INJECTION */(function(Dropzone) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_semantic_ui_css_semantic_min_css__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_semantic_ui_css_semantic_min_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_semantic_ui_css_semantic_min_css__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__static_css_app_css__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__static_css_app_css__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__static_css_app_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__static_css_app_css__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_semantic_ui_css_semantic_min_js__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_semantic_ui_css_semantic_min_js__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_semantic_ui_css_semantic_min_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_semantic_ui_css_semantic_min_js__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__api__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__api___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__api__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_dropzone_dist_dropzone_js__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_dropzone_dist_dropzone_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_dropzone_dist_dropzone_js__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_dropzone_dist_dropzone_css__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_dropzone_dist_dropzone_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_dropzone_dist_dropzone_css__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__api__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__api___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5__api__);
 
 
 
@@ -10348,6 +10352,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 
+Dropzone.autoDiscover = false;
+
+
+
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(3)))
 
 /***/ }),
 /* 2 */
@@ -10370,9 +10379,1777 @@ $.fn.api.settings.api = api;
 
 /***/ }),
 /* 3 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-// removed by extract-text-webpack-plugin
+/* WEBPACK VAR INJECTION */(function(jQuery, module) {
+/*
+ *
+ * More info at [www.dropzonejs.com](http://www.dropzonejs.com)
+ *
+ * Copyright (c) 2012, Matias Meno
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ *
+ */
+
+(function() {
+  var Dropzone, Emitter, camelize, contentLoaded, detectVerticalSquash, drawImageIOSFix, noop, without,
+    __slice = [].slice,
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  noop = function() {};
+
+  Emitter = (function() {
+    function Emitter() {}
+
+    Emitter.prototype.addEventListener = Emitter.prototype.on;
+
+    Emitter.prototype.on = function(event, fn) {
+      this._callbacks = this._callbacks || {};
+      if (!this._callbacks[event]) {
+        this._callbacks[event] = [];
+      }
+      this._callbacks[event].push(fn);
+      return this;
+    };
+
+    Emitter.prototype.emit = function() {
+      var args, callback, callbacks, event, _i, _len;
+      event = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
+      this._callbacks = this._callbacks || {};
+      callbacks = this._callbacks[event];
+      if (callbacks) {
+        for (_i = 0, _len = callbacks.length; _i < _len; _i++) {
+          callback = callbacks[_i];
+          callback.apply(this, args);
+        }
+      }
+      return this;
+    };
+
+    Emitter.prototype.removeListener = Emitter.prototype.off;
+
+    Emitter.prototype.removeAllListeners = Emitter.prototype.off;
+
+    Emitter.prototype.removeEventListener = Emitter.prototype.off;
+
+    Emitter.prototype.off = function(event, fn) {
+      var callback, callbacks, i, _i, _len;
+      if (!this._callbacks || arguments.length === 0) {
+        this._callbacks = {};
+        return this;
+      }
+      callbacks = this._callbacks[event];
+      if (!callbacks) {
+        return this;
+      }
+      if (arguments.length === 1) {
+        delete this._callbacks[event];
+        return this;
+      }
+      for (i = _i = 0, _len = callbacks.length; _i < _len; i = ++_i) {
+        callback = callbacks[i];
+        if (callback === fn) {
+          callbacks.splice(i, 1);
+          break;
+        }
+      }
+      return this;
+    };
+
+    return Emitter;
+
+  })();
+
+  Dropzone = (function(_super) {
+    var extend, resolveOption;
+
+    __extends(Dropzone, _super);
+
+    Dropzone.prototype.Emitter = Emitter;
+
+
+    /*
+    This is a list of all available events you can register on a dropzone object.
+    
+    You can register an event handler like this:
+    
+        dropzone.on("dragEnter", function() { });
+     */
+
+    Dropzone.prototype.events = ["drop", "dragstart", "dragend", "dragenter", "dragover", "dragleave", "addedfile", "addedfiles", "removedfile", "thumbnail", "error", "errormultiple", "processing", "processingmultiple", "uploadprogress", "totaluploadprogress", "sending", "sendingmultiple", "success", "successmultiple", "canceled", "canceledmultiple", "complete", "completemultiple", "reset", "maxfilesexceeded", "maxfilesreached", "queuecomplete"];
+
+    Dropzone.prototype.defaultOptions = {
+      url: null,
+      method: "post",
+      withCredentials: false,
+      parallelUploads: 2,
+      uploadMultiple: false,
+      maxFilesize: 256,
+      paramName: "file",
+      createImageThumbnails: true,
+      maxThumbnailFilesize: 10,
+      thumbnailWidth: 120,
+      thumbnailHeight: 120,
+      filesizeBase: 1000,
+      maxFiles: null,
+      params: {},
+      clickable: true,
+      ignoreHiddenFiles: true,
+      acceptedFiles: null,
+      acceptedMimeTypes: null,
+      autoProcessQueue: true,
+      autoQueue: true,
+      addRemoveLinks: false,
+      previewsContainer: null,
+      hiddenInputContainer: "body",
+      capture: null,
+      renameFilename: null,
+      dictDefaultMessage: "Drop files here to upload",
+      dictFallbackMessage: "Your browser does not support drag'n'drop file uploads.",
+      dictFallbackText: "Please use the fallback form below to upload your files like in the olden days.",
+      dictFileTooBig: "File is too big ({{filesize}}MiB). Max filesize: {{maxFilesize}}MiB.",
+      dictInvalidFileType: "You can't upload files of this type.",
+      dictResponseError: "Server responded with {{statusCode}} code.",
+      dictCancelUpload: "Cancel upload",
+      dictCancelUploadConfirmation: "Are you sure you want to cancel this upload?",
+      dictRemoveFile: "Remove file",
+      dictRemoveFileConfirmation: null,
+      dictMaxFilesExceeded: "You can not upload any more files.",
+      accept: function(file, done) {
+        return done();
+      },
+      init: function() {
+        return noop;
+      },
+      forceFallback: false,
+      fallback: function() {
+        var child, messageElement, span, _i, _len, _ref;
+        this.element.className = "" + this.element.className + " dz-browser-not-supported";
+        _ref = this.element.getElementsByTagName("div");
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          child = _ref[_i];
+          if (/(^| )dz-message($| )/.test(child.className)) {
+            messageElement = child;
+            child.className = "dz-message";
+            continue;
+          }
+        }
+        if (!messageElement) {
+          messageElement = Dropzone.createElement("<div class=\"dz-message\"><span></span></div>");
+          this.element.appendChild(messageElement);
+        }
+        span = messageElement.getElementsByTagName("span")[0];
+        if (span) {
+          if (span.textContent != null) {
+            span.textContent = this.options.dictFallbackMessage;
+          } else if (span.innerText != null) {
+            span.innerText = this.options.dictFallbackMessage;
+          }
+        }
+        return this.element.appendChild(this.getFallbackForm());
+      },
+      resize: function(file) {
+        var info, srcRatio, trgRatio;
+        info = {
+          srcX: 0,
+          srcY: 0,
+          srcWidth: file.width,
+          srcHeight: file.height
+        };
+        srcRatio = file.width / file.height;
+        info.optWidth = this.options.thumbnailWidth;
+        info.optHeight = this.options.thumbnailHeight;
+        if ((info.optWidth == null) && (info.optHeight == null)) {
+          info.optWidth = info.srcWidth;
+          info.optHeight = info.srcHeight;
+        } else if (info.optWidth == null) {
+          info.optWidth = srcRatio * info.optHeight;
+        } else if (info.optHeight == null) {
+          info.optHeight = (1 / srcRatio) * info.optWidth;
+        }
+        trgRatio = info.optWidth / info.optHeight;
+        if (file.height < info.optHeight || file.width < info.optWidth) {
+          info.trgHeight = info.srcHeight;
+          info.trgWidth = info.srcWidth;
+        } else {
+          if (srcRatio > trgRatio) {
+            info.srcHeight = file.height;
+            info.srcWidth = info.srcHeight * trgRatio;
+          } else {
+            info.srcWidth = file.width;
+            info.srcHeight = info.srcWidth / trgRatio;
+          }
+        }
+        info.srcX = (file.width - info.srcWidth) / 2;
+        info.srcY = (file.height - info.srcHeight) / 2;
+        return info;
+      },
+
+      /*
+      Those functions register themselves to the events on init and handle all
+      the user interface specific stuff. Overwriting them won't break the upload
+      but can break the way it's displayed.
+      You can overwrite them if you don't like the default behavior. If you just
+      want to add an additional event handler, register it on the dropzone object
+      and don't overwrite those options.
+       */
+      drop: function(e) {
+        return this.element.classList.remove("dz-drag-hover");
+      },
+      dragstart: noop,
+      dragend: function(e) {
+        return this.element.classList.remove("dz-drag-hover");
+      },
+      dragenter: function(e) {
+        return this.element.classList.add("dz-drag-hover");
+      },
+      dragover: function(e) {
+        return this.element.classList.add("dz-drag-hover");
+      },
+      dragleave: function(e) {
+        return this.element.classList.remove("dz-drag-hover");
+      },
+      paste: noop,
+      reset: function() {
+        return this.element.classList.remove("dz-started");
+      },
+      addedfile: function(file) {
+        var node, removeFileEvent, removeLink, _i, _j, _k, _len, _len1, _len2, _ref, _ref1, _ref2, _results;
+        if (this.element === this.previewsContainer) {
+          this.element.classList.add("dz-started");
+        }
+        if (this.previewsContainer) {
+          file.previewElement = Dropzone.createElement(this.options.previewTemplate.trim());
+          file.previewTemplate = file.previewElement;
+          this.previewsContainer.appendChild(file.previewElement);
+          _ref = file.previewElement.querySelectorAll("[data-dz-name]");
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            node = _ref[_i];
+            node.textContent = this._renameFilename(file.name);
+          }
+          _ref1 = file.previewElement.querySelectorAll("[data-dz-size]");
+          for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+            node = _ref1[_j];
+            node.innerHTML = this.filesize(file.size);
+          }
+          if (this.options.addRemoveLinks) {
+            file._removeLink = Dropzone.createElement("<a class=\"dz-remove\" href=\"javascript:undefined;\" data-dz-remove>" + this.options.dictRemoveFile + "</a>");
+            file.previewElement.appendChild(file._removeLink);
+          }
+          removeFileEvent = (function(_this) {
+            return function(e) {
+              e.preventDefault();
+              e.stopPropagation();
+              if (file.status === Dropzone.UPLOADING) {
+                return Dropzone.confirm(_this.options.dictCancelUploadConfirmation, function() {
+                  return _this.removeFile(file);
+                });
+              } else {
+                if (_this.options.dictRemoveFileConfirmation) {
+                  return Dropzone.confirm(_this.options.dictRemoveFileConfirmation, function() {
+                    return _this.removeFile(file);
+                  });
+                } else {
+                  return _this.removeFile(file);
+                }
+              }
+            };
+          })(this);
+          _ref2 = file.previewElement.querySelectorAll("[data-dz-remove]");
+          _results = [];
+          for (_k = 0, _len2 = _ref2.length; _k < _len2; _k++) {
+            removeLink = _ref2[_k];
+            _results.push(removeLink.addEventListener("click", removeFileEvent));
+          }
+          return _results;
+        }
+      },
+      removedfile: function(file) {
+        var _ref;
+        if (file.previewElement) {
+          if ((_ref = file.previewElement) != null) {
+            _ref.parentNode.removeChild(file.previewElement);
+          }
+        }
+        return this._updateMaxFilesReachedClass();
+      },
+      thumbnail: function(file, dataUrl) {
+        var thumbnailElement, _i, _len, _ref;
+        if (file.previewElement) {
+          file.previewElement.classList.remove("dz-file-preview");
+          _ref = file.previewElement.querySelectorAll("[data-dz-thumbnail]");
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            thumbnailElement = _ref[_i];
+            thumbnailElement.alt = file.name;
+            thumbnailElement.src = dataUrl;
+          }
+          return setTimeout(((function(_this) {
+            return function() {
+              return file.previewElement.classList.add("dz-image-preview");
+            };
+          })(this)), 1);
+        }
+      },
+      error: function(file, message) {
+        var node, _i, _len, _ref, _results;
+        if (file.previewElement) {
+          file.previewElement.classList.add("dz-error");
+          if (typeof message !== "String" && message.error) {
+            message = message.error;
+          }
+          _ref = file.previewElement.querySelectorAll("[data-dz-errormessage]");
+          _results = [];
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            node = _ref[_i];
+            _results.push(node.textContent = message);
+          }
+          return _results;
+        }
+      },
+      errormultiple: noop,
+      processing: function(file) {
+        if (file.previewElement) {
+          file.previewElement.classList.add("dz-processing");
+          if (file._removeLink) {
+            return file._removeLink.textContent = this.options.dictCancelUpload;
+          }
+        }
+      },
+      processingmultiple: noop,
+      uploadprogress: function(file, progress, bytesSent) {
+        var node, _i, _len, _ref, _results;
+        if (file.previewElement) {
+          _ref = file.previewElement.querySelectorAll("[data-dz-uploadprogress]");
+          _results = [];
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            node = _ref[_i];
+            if (node.nodeName === 'PROGRESS') {
+              _results.push(node.value = progress);
+            } else {
+              _results.push(node.style.width = "" + progress + "%");
+            }
+          }
+          return _results;
+        }
+      },
+      totaluploadprogress: noop,
+      sending: noop,
+      sendingmultiple: noop,
+      success: function(file) {
+        if (file.previewElement) {
+          return file.previewElement.classList.add("dz-success");
+        }
+      },
+      successmultiple: noop,
+      canceled: function(file) {
+        return this.emit("error", file, "Upload canceled.");
+      },
+      canceledmultiple: noop,
+      complete: function(file) {
+        if (file._removeLink) {
+          file._removeLink.textContent = this.options.dictRemoveFile;
+        }
+        if (file.previewElement) {
+          return file.previewElement.classList.add("dz-complete");
+        }
+      },
+      completemultiple: noop,
+      maxfilesexceeded: noop,
+      maxfilesreached: noop,
+      queuecomplete: noop,
+      addedfiles: noop,
+      previewTemplate: "<div class=\"dz-preview dz-file-preview\">\n  <div class=\"dz-image\"><img data-dz-thumbnail /></div>\n  <div class=\"dz-details\">\n    <div class=\"dz-size\"><span data-dz-size></span></div>\n    <div class=\"dz-filename\"><span data-dz-name></span></div>\n  </div>\n  <div class=\"dz-progress\"><span class=\"dz-upload\" data-dz-uploadprogress></span></div>\n  <div class=\"dz-error-message\"><span data-dz-errormessage></span></div>\n  <div class=\"dz-success-mark\">\n    <svg width=\"54px\" height=\"54px\" viewBox=\"0 0 54 54\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:sketch=\"http://www.bohemiancoding.com/sketch/ns\">\n      <title>Check</title>\n      <defs></defs>\n      <g id=\"Page-1\" stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\" sketch:type=\"MSPage\">\n        <path d=\"M23.5,31.8431458 L17.5852419,25.9283877 C16.0248253,24.3679711 13.4910294,24.366835 11.9289322,25.9289322 C10.3700136,27.4878508 10.3665912,30.0234455 11.9283877,31.5852419 L20.4147581,40.0716123 C20.5133999,40.1702541 20.6159315,40.2626649 20.7218615,40.3488435 C22.2835669,41.8725651 24.794234,41.8626202 26.3461564,40.3106978 L43.3106978,23.3461564 C44.8771021,21.7797521 44.8758057,19.2483887 43.3137085,17.6862915 C41.7547899,16.1273729 39.2176035,16.1255422 37.6538436,17.6893022 L23.5,31.8431458 Z M27,53 C41.3594035,53 53,41.3594035 53,27 C53,12.6405965 41.3594035,1 27,1 C12.6405965,1 1,12.6405965 1,27 C1,41.3594035 12.6405965,53 27,53 Z\" id=\"Oval-2\" stroke-opacity=\"0.198794158\" stroke=\"#747474\" fill-opacity=\"0.816519475\" fill=\"#FFFFFF\" sketch:type=\"MSShapeGroup\"></path>\n      </g>\n    </svg>\n  </div>\n  <div class=\"dz-error-mark\">\n    <svg width=\"54px\" height=\"54px\" viewBox=\"0 0 54 54\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:sketch=\"http://www.bohemiancoding.com/sketch/ns\">\n      <title>Error</title>\n      <defs></defs>\n      <g id=\"Page-1\" stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\" sketch:type=\"MSPage\">\n        <g id=\"Check-+-Oval-2\" sketch:type=\"MSLayerGroup\" stroke=\"#747474\" stroke-opacity=\"0.198794158\" fill=\"#FFFFFF\" fill-opacity=\"0.816519475\">\n          <path d=\"M32.6568542,29 L38.3106978,23.3461564 C39.8771021,21.7797521 39.8758057,19.2483887 38.3137085,17.6862915 C36.7547899,16.1273729 34.2176035,16.1255422 32.6538436,17.6893022 L27,23.3431458 L21.3461564,17.6893022 C19.7823965,16.1255422 17.2452101,16.1273729 15.6862915,17.6862915 C14.1241943,19.2483887 14.1228979,21.7797521 15.6893022,23.3461564 L21.3431458,29 L15.6893022,34.6538436 C14.1228979,36.2202479 14.1241943,38.7516113 15.6862915,40.3137085 C17.2452101,41.8726271 19.7823965,41.8744578 21.3461564,40.3106978 L27,34.6568542 L32.6538436,40.3106978 C34.2176035,41.8744578 36.7547899,41.8726271 38.3137085,40.3137085 C39.8758057,38.7516113 39.8771021,36.2202479 38.3106978,34.6538436 L32.6568542,29 Z M27,53 C41.3594035,53 53,41.3594035 53,27 C53,12.6405965 41.3594035,1 27,1 C12.6405965,1 1,12.6405965 1,27 C1,41.3594035 12.6405965,53 27,53 Z\" id=\"Oval-2\" sketch:type=\"MSShapeGroup\"></path>\n        </g>\n      </g>\n    </svg>\n  </div>\n</div>"
+    };
+
+    extend = function() {
+      var key, object, objects, target, val, _i, _len;
+      target = arguments[0], objects = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
+      for (_i = 0, _len = objects.length; _i < _len; _i++) {
+        object = objects[_i];
+        for (key in object) {
+          val = object[key];
+          target[key] = val;
+        }
+      }
+      return target;
+    };
+
+    function Dropzone(element, options) {
+      var elementOptions, fallback, _ref;
+      this.element = element;
+      this.version = Dropzone.version;
+      this.defaultOptions.previewTemplate = this.defaultOptions.previewTemplate.replace(/\n*/g, "");
+      this.clickableElements = [];
+      this.listeners = [];
+      this.files = [];
+      if (typeof this.element === "string") {
+        this.element = document.querySelector(this.element);
+      }
+      if (!(this.element && (this.element.nodeType != null))) {
+        throw new Error("Invalid dropzone element.");
+      }
+      if (this.element.dropzone) {
+        throw new Error("Dropzone already attached.");
+      }
+      Dropzone.instances.push(this);
+      this.element.dropzone = this;
+      elementOptions = (_ref = Dropzone.optionsForElement(this.element)) != null ? _ref : {};
+      this.options = extend({}, this.defaultOptions, elementOptions, options != null ? options : {});
+      if (this.options.forceFallback || !Dropzone.isBrowserSupported()) {
+        return this.options.fallback.call(this);
+      }
+      if (this.options.url == null) {
+        this.options.url = this.element.getAttribute("action");
+      }
+      if (!this.options.url) {
+        throw new Error("No URL provided.");
+      }
+      if (this.options.acceptedFiles && this.options.acceptedMimeTypes) {
+        throw new Error("You can't provide both 'acceptedFiles' and 'acceptedMimeTypes'. 'acceptedMimeTypes' is deprecated.");
+      }
+      if (this.options.acceptedMimeTypes) {
+        this.options.acceptedFiles = this.options.acceptedMimeTypes;
+        delete this.options.acceptedMimeTypes;
+      }
+      this.options.method = this.options.method.toUpperCase();
+      if ((fallback = this.getExistingFallback()) && fallback.parentNode) {
+        fallback.parentNode.removeChild(fallback);
+      }
+      if (this.options.previewsContainer !== false) {
+        if (this.options.previewsContainer) {
+          this.previewsContainer = Dropzone.getElement(this.options.previewsContainer, "previewsContainer");
+        } else {
+          this.previewsContainer = this.element;
+        }
+      }
+      if (this.options.clickable) {
+        if (this.options.clickable === true) {
+          this.clickableElements = [this.element];
+        } else {
+          this.clickableElements = Dropzone.getElements(this.options.clickable, "clickable");
+        }
+      }
+      this.init();
+    }
+
+    Dropzone.prototype.getAcceptedFiles = function() {
+      var file, _i, _len, _ref, _results;
+      _ref = this.files;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        file = _ref[_i];
+        if (file.accepted) {
+          _results.push(file);
+        }
+      }
+      return _results;
+    };
+
+    Dropzone.prototype.getRejectedFiles = function() {
+      var file, _i, _len, _ref, _results;
+      _ref = this.files;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        file = _ref[_i];
+        if (!file.accepted) {
+          _results.push(file);
+        }
+      }
+      return _results;
+    };
+
+    Dropzone.prototype.getFilesWithStatus = function(status) {
+      var file, _i, _len, _ref, _results;
+      _ref = this.files;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        file = _ref[_i];
+        if (file.status === status) {
+          _results.push(file);
+        }
+      }
+      return _results;
+    };
+
+    Dropzone.prototype.getQueuedFiles = function() {
+      return this.getFilesWithStatus(Dropzone.QUEUED);
+    };
+
+    Dropzone.prototype.getUploadingFiles = function() {
+      return this.getFilesWithStatus(Dropzone.UPLOADING);
+    };
+
+    Dropzone.prototype.getAddedFiles = function() {
+      return this.getFilesWithStatus(Dropzone.ADDED);
+    };
+
+    Dropzone.prototype.getActiveFiles = function() {
+      var file, _i, _len, _ref, _results;
+      _ref = this.files;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        file = _ref[_i];
+        if (file.status === Dropzone.UPLOADING || file.status === Dropzone.QUEUED) {
+          _results.push(file);
+        }
+      }
+      return _results;
+    };
+
+    Dropzone.prototype.init = function() {
+      var eventName, noPropagation, setupHiddenFileInput, _i, _len, _ref, _ref1;
+      if (this.element.tagName === "form") {
+        this.element.setAttribute("enctype", "multipart/form-data");
+      }
+      if (this.element.classList.contains("dropzone") && !this.element.querySelector(".dz-message")) {
+        this.element.appendChild(Dropzone.createElement("<div class=\"dz-default dz-message\"><span>" + this.options.dictDefaultMessage + "</span></div>"));
+      }
+      if (this.clickableElements.length) {
+        setupHiddenFileInput = (function(_this) {
+          return function() {
+            if (_this.hiddenFileInput) {
+              _this.hiddenFileInput.parentNode.removeChild(_this.hiddenFileInput);
+            }
+            _this.hiddenFileInput = document.createElement("input");
+            _this.hiddenFileInput.setAttribute("type", "file");
+            if ((_this.options.maxFiles == null) || _this.options.maxFiles > 1) {
+              _this.hiddenFileInput.setAttribute("multiple", "multiple");
+            }
+            _this.hiddenFileInput.className = "dz-hidden-input";
+            if (_this.options.acceptedFiles != null) {
+              _this.hiddenFileInput.setAttribute("accept", _this.options.acceptedFiles);
+            }
+            if (_this.options.capture != null) {
+              _this.hiddenFileInput.setAttribute("capture", _this.options.capture);
+            }
+            _this.hiddenFileInput.style.visibility = "hidden";
+            _this.hiddenFileInput.style.position = "absolute";
+            _this.hiddenFileInput.style.top = "0";
+            _this.hiddenFileInput.style.left = "0";
+            _this.hiddenFileInput.style.height = "0";
+            _this.hiddenFileInput.style.width = "0";
+            document.querySelector(_this.options.hiddenInputContainer).appendChild(_this.hiddenFileInput);
+            return _this.hiddenFileInput.addEventListener("change", function() {
+              var file, files, _i, _len;
+              files = _this.hiddenFileInput.files;
+              if (files.length) {
+                for (_i = 0, _len = files.length; _i < _len; _i++) {
+                  file = files[_i];
+                  _this.addFile(file);
+                }
+              }
+              _this.emit("addedfiles", files);
+              return setupHiddenFileInput();
+            });
+          };
+        })(this);
+        setupHiddenFileInput();
+      }
+      this.URL = (_ref = window.URL) != null ? _ref : window.webkitURL;
+      _ref1 = this.events;
+      for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
+        eventName = _ref1[_i];
+        this.on(eventName, this.options[eventName]);
+      }
+      this.on("uploadprogress", (function(_this) {
+        return function() {
+          return _this.updateTotalUploadProgress();
+        };
+      })(this));
+      this.on("removedfile", (function(_this) {
+        return function() {
+          return _this.updateTotalUploadProgress();
+        };
+      })(this));
+      this.on("canceled", (function(_this) {
+        return function(file) {
+          return _this.emit("complete", file);
+        };
+      })(this));
+      this.on("complete", (function(_this) {
+        return function(file) {
+          if (_this.getAddedFiles().length === 0 && _this.getUploadingFiles().length === 0 && _this.getQueuedFiles().length === 0) {
+            return setTimeout((function() {
+              return _this.emit("queuecomplete");
+            }), 0);
+          }
+        };
+      })(this));
+      noPropagation = function(e) {
+        e.stopPropagation();
+        if (e.preventDefault) {
+          return e.preventDefault();
+        } else {
+          return e.returnValue = false;
+        }
+      };
+      this.listeners = [
+        {
+          element: this.element,
+          events: {
+            "dragstart": (function(_this) {
+              return function(e) {
+                return _this.emit("dragstart", e);
+              };
+            })(this),
+            "dragenter": (function(_this) {
+              return function(e) {
+                noPropagation(e);
+                return _this.emit("dragenter", e);
+              };
+            })(this),
+            "dragover": (function(_this) {
+              return function(e) {
+                var efct;
+                try {
+                  efct = e.dataTransfer.effectAllowed;
+                } catch (_error) {}
+                e.dataTransfer.dropEffect = 'move' === efct || 'linkMove' === efct ? 'move' : 'copy';
+                noPropagation(e);
+                return _this.emit("dragover", e);
+              };
+            })(this),
+            "dragleave": (function(_this) {
+              return function(e) {
+                return _this.emit("dragleave", e);
+              };
+            })(this),
+            "drop": (function(_this) {
+              return function(e) {
+                noPropagation(e);
+                return _this.drop(e);
+              };
+            })(this),
+            "dragend": (function(_this) {
+              return function(e) {
+                return _this.emit("dragend", e);
+              };
+            })(this)
+          }
+        }
+      ];
+      this.clickableElements.forEach((function(_this) {
+        return function(clickableElement) {
+          return _this.listeners.push({
+            element: clickableElement,
+            events: {
+              "click": function(evt) {
+                if ((clickableElement !== _this.element) || (evt.target === _this.element || Dropzone.elementInside(evt.target, _this.element.querySelector(".dz-message")))) {
+                  _this.hiddenFileInput.click();
+                }
+                return true;
+              }
+            }
+          });
+        };
+      })(this));
+      this.enable();
+      return this.options.init.call(this);
+    };
+
+    Dropzone.prototype.destroy = function() {
+      var _ref;
+      this.disable();
+      this.removeAllFiles(true);
+      if ((_ref = this.hiddenFileInput) != null ? _ref.parentNode : void 0) {
+        this.hiddenFileInput.parentNode.removeChild(this.hiddenFileInput);
+        this.hiddenFileInput = null;
+      }
+      delete this.element.dropzone;
+      return Dropzone.instances.splice(Dropzone.instances.indexOf(this), 1);
+    };
+
+    Dropzone.prototype.updateTotalUploadProgress = function() {
+      var activeFiles, file, totalBytes, totalBytesSent, totalUploadProgress, _i, _len, _ref;
+      totalBytesSent = 0;
+      totalBytes = 0;
+      activeFiles = this.getActiveFiles();
+      if (activeFiles.length) {
+        _ref = this.getActiveFiles();
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          file = _ref[_i];
+          totalBytesSent += file.upload.bytesSent;
+          totalBytes += file.upload.total;
+        }
+        totalUploadProgress = 100 * totalBytesSent / totalBytes;
+      } else {
+        totalUploadProgress = 100;
+      }
+      return this.emit("totaluploadprogress", totalUploadProgress, totalBytes, totalBytesSent);
+    };
+
+    Dropzone.prototype._getParamName = function(n) {
+      if (typeof this.options.paramName === "function") {
+        return this.options.paramName(n);
+      } else {
+        return "" + this.options.paramName + (this.options.uploadMultiple ? "[" + n + "]" : "");
+      }
+    };
+
+    Dropzone.prototype._renameFilename = function(name) {
+      if (typeof this.options.renameFilename !== "function") {
+        return name;
+      }
+      return this.options.renameFilename(name);
+    };
+
+    Dropzone.prototype.getFallbackForm = function() {
+      var existingFallback, fields, fieldsString, form;
+      if (existingFallback = this.getExistingFallback()) {
+        return existingFallback;
+      }
+      fieldsString = "<div class=\"dz-fallback\">";
+      if (this.options.dictFallbackText) {
+        fieldsString += "<p>" + this.options.dictFallbackText + "</p>";
+      }
+      fieldsString += "<input type=\"file\" name=\"" + (this._getParamName(0)) + "\" " + (this.options.uploadMultiple ? 'multiple="multiple"' : void 0) + " /><input type=\"submit\" value=\"Upload!\"></div>";
+      fields = Dropzone.createElement(fieldsString);
+      if (this.element.tagName !== "FORM") {
+        form = Dropzone.createElement("<form action=\"" + this.options.url + "\" enctype=\"multipart/form-data\" method=\"" + this.options.method + "\"></form>");
+        form.appendChild(fields);
+      } else {
+        this.element.setAttribute("enctype", "multipart/form-data");
+        this.element.setAttribute("method", this.options.method);
+      }
+      return form != null ? form : fields;
+    };
+
+    Dropzone.prototype.getExistingFallback = function() {
+      var fallback, getFallback, tagName, _i, _len, _ref;
+      getFallback = function(elements) {
+        var el, _i, _len;
+        for (_i = 0, _len = elements.length; _i < _len; _i++) {
+          el = elements[_i];
+          if (/(^| )fallback($| )/.test(el.className)) {
+            return el;
+          }
+        }
+      };
+      _ref = ["div", "form"];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        tagName = _ref[_i];
+        if (fallback = getFallback(this.element.getElementsByTagName(tagName))) {
+          return fallback;
+        }
+      }
+    };
+
+    Dropzone.prototype.setupEventListeners = function() {
+      var elementListeners, event, listener, _i, _len, _ref, _results;
+      _ref = this.listeners;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        elementListeners = _ref[_i];
+        _results.push((function() {
+          var _ref1, _results1;
+          _ref1 = elementListeners.events;
+          _results1 = [];
+          for (event in _ref1) {
+            listener = _ref1[event];
+            _results1.push(elementListeners.element.addEventListener(event, listener, false));
+          }
+          return _results1;
+        })());
+      }
+      return _results;
+    };
+
+    Dropzone.prototype.removeEventListeners = function() {
+      var elementListeners, event, listener, _i, _len, _ref, _results;
+      _ref = this.listeners;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        elementListeners = _ref[_i];
+        _results.push((function() {
+          var _ref1, _results1;
+          _ref1 = elementListeners.events;
+          _results1 = [];
+          for (event in _ref1) {
+            listener = _ref1[event];
+            _results1.push(elementListeners.element.removeEventListener(event, listener, false));
+          }
+          return _results1;
+        })());
+      }
+      return _results;
+    };
+
+    Dropzone.prototype.disable = function() {
+      var file, _i, _len, _ref, _results;
+      this.clickableElements.forEach(function(element) {
+        return element.classList.remove("dz-clickable");
+      });
+      this.removeEventListeners();
+      _ref = this.files;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        file = _ref[_i];
+        _results.push(this.cancelUpload(file));
+      }
+      return _results;
+    };
+
+    Dropzone.prototype.enable = function() {
+      this.clickableElements.forEach(function(element) {
+        return element.classList.add("dz-clickable");
+      });
+      return this.setupEventListeners();
+    };
+
+    Dropzone.prototype.filesize = function(size) {
+      var cutoff, i, selectedSize, selectedUnit, unit, units, _i, _len;
+      selectedSize = 0;
+      selectedUnit = "b";
+      if (size > 0) {
+        units = ['TB', 'GB', 'MB', 'KB', 'b'];
+        for (i = _i = 0, _len = units.length; _i < _len; i = ++_i) {
+          unit = units[i];
+          cutoff = Math.pow(this.options.filesizeBase, 4 - i) / 10;
+          if (size >= cutoff) {
+            selectedSize = size / Math.pow(this.options.filesizeBase, 4 - i);
+            selectedUnit = unit;
+            break;
+          }
+        }
+        selectedSize = Math.round(10 * selectedSize) / 10;
+      }
+      return "<strong>" + selectedSize + "</strong> " + selectedUnit;
+    };
+
+    Dropzone.prototype._updateMaxFilesReachedClass = function() {
+      if ((this.options.maxFiles != null) && this.getAcceptedFiles().length >= this.options.maxFiles) {
+        if (this.getAcceptedFiles().length === this.options.maxFiles) {
+          this.emit('maxfilesreached', this.files);
+        }
+        return this.element.classList.add("dz-max-files-reached");
+      } else {
+        return this.element.classList.remove("dz-max-files-reached");
+      }
+    };
+
+    Dropzone.prototype.drop = function(e) {
+      var files, items;
+      if (!e.dataTransfer) {
+        return;
+      }
+      this.emit("drop", e);
+      files = e.dataTransfer.files;
+      this.emit("addedfiles", files);
+      if (files.length) {
+        items = e.dataTransfer.items;
+        if (items && items.length && (items[0].webkitGetAsEntry != null)) {
+          this._addFilesFromItems(items);
+        } else {
+          this.handleFiles(files);
+        }
+      }
+    };
+
+    Dropzone.prototype.paste = function(e) {
+      var items, _ref;
+      if ((e != null ? (_ref = e.clipboardData) != null ? _ref.items : void 0 : void 0) == null) {
+        return;
+      }
+      this.emit("paste", e);
+      items = e.clipboardData.items;
+      if (items.length) {
+        return this._addFilesFromItems(items);
+      }
+    };
+
+    Dropzone.prototype.handleFiles = function(files) {
+      var file, _i, _len, _results;
+      _results = [];
+      for (_i = 0, _len = files.length; _i < _len; _i++) {
+        file = files[_i];
+        _results.push(this.addFile(file));
+      }
+      return _results;
+    };
+
+    Dropzone.prototype._addFilesFromItems = function(items) {
+      var entry, item, _i, _len, _results;
+      _results = [];
+      for (_i = 0, _len = items.length; _i < _len; _i++) {
+        item = items[_i];
+        if ((item.webkitGetAsEntry != null) && (entry = item.webkitGetAsEntry())) {
+          if (entry.isFile) {
+            _results.push(this.addFile(item.getAsFile()));
+          } else if (entry.isDirectory) {
+            _results.push(this._addFilesFromDirectory(entry, entry.name));
+          } else {
+            _results.push(void 0);
+          }
+        } else if (item.getAsFile != null) {
+          if ((item.kind == null) || item.kind === "file") {
+            _results.push(this.addFile(item.getAsFile()));
+          } else {
+            _results.push(void 0);
+          }
+        } else {
+          _results.push(void 0);
+        }
+      }
+      return _results;
+    };
+
+    Dropzone.prototype._addFilesFromDirectory = function(directory, path) {
+      var dirReader, errorHandler, readEntries;
+      dirReader = directory.createReader();
+      errorHandler = function(error) {
+        return typeof console !== "undefined" && console !== null ? typeof console.log === "function" ? console.log(error) : void 0 : void 0;
+      };
+      readEntries = (function(_this) {
+        return function() {
+          return dirReader.readEntries(function(entries) {
+            var entry, _i, _len;
+            if (entries.length > 0) {
+              for (_i = 0, _len = entries.length; _i < _len; _i++) {
+                entry = entries[_i];
+                if (entry.isFile) {
+                  entry.file(function(file) {
+                    if (_this.options.ignoreHiddenFiles && file.name.substring(0, 1) === '.') {
+                      return;
+                    }
+                    file.fullPath = "" + path + "/" + file.name;
+                    return _this.addFile(file);
+                  });
+                } else if (entry.isDirectory) {
+                  _this._addFilesFromDirectory(entry, "" + path + "/" + entry.name);
+                }
+              }
+              readEntries();
+            }
+            return null;
+          }, errorHandler);
+        };
+      })(this);
+      return readEntries();
+    };
+
+    Dropzone.prototype.accept = function(file, done) {
+      if (file.size > this.options.maxFilesize * 1024 * 1024) {
+        return done(this.options.dictFileTooBig.replace("{{filesize}}", Math.round(file.size / 1024 / 10.24) / 100).replace("{{maxFilesize}}", this.options.maxFilesize));
+      } else if (!Dropzone.isValidFile(file, this.options.acceptedFiles)) {
+        return done(this.options.dictInvalidFileType);
+      } else if ((this.options.maxFiles != null) && this.getAcceptedFiles().length >= this.options.maxFiles) {
+        done(this.options.dictMaxFilesExceeded.replace("{{maxFiles}}", this.options.maxFiles));
+        return this.emit("maxfilesexceeded", file);
+      } else {
+        return this.options.accept.call(this, file, done);
+      }
+    };
+
+    Dropzone.prototype.addFile = function(file) {
+      file.upload = {
+        progress: 0,
+        total: file.size,
+        bytesSent: 0
+      };
+      this.files.push(file);
+      file.status = Dropzone.ADDED;
+      this.emit("addedfile", file);
+      this._enqueueThumbnail(file);
+      return this.accept(file, (function(_this) {
+        return function(error) {
+          if (error) {
+            file.accepted = false;
+            _this._errorProcessing([file], error);
+          } else {
+            file.accepted = true;
+            if (_this.options.autoQueue) {
+              _this.enqueueFile(file);
+            }
+          }
+          return _this._updateMaxFilesReachedClass();
+        };
+      })(this));
+    };
+
+    Dropzone.prototype.enqueueFiles = function(files) {
+      var file, _i, _len;
+      for (_i = 0, _len = files.length; _i < _len; _i++) {
+        file = files[_i];
+        this.enqueueFile(file);
+      }
+      return null;
+    };
+
+    Dropzone.prototype.enqueueFile = function(file) {
+      if (file.status === Dropzone.ADDED && file.accepted === true) {
+        file.status = Dropzone.QUEUED;
+        if (this.options.autoProcessQueue) {
+          return setTimeout(((function(_this) {
+            return function() {
+              return _this.processQueue();
+            };
+          })(this)), 0);
+        }
+      } else {
+        throw new Error("This file can't be queued because it has already been processed or was rejected.");
+      }
+    };
+
+    Dropzone.prototype._thumbnailQueue = [];
+
+    Dropzone.prototype._processingThumbnail = false;
+
+    Dropzone.prototype._enqueueThumbnail = function(file) {
+      if (this.options.createImageThumbnails && file.type.match(/image.*/) && file.size <= this.options.maxThumbnailFilesize * 1024 * 1024) {
+        this._thumbnailQueue.push(file);
+        return setTimeout(((function(_this) {
+          return function() {
+            return _this._processThumbnailQueue();
+          };
+        })(this)), 0);
+      }
+    };
+
+    Dropzone.prototype._processThumbnailQueue = function() {
+      if (this._processingThumbnail || this._thumbnailQueue.length === 0) {
+        return;
+      }
+      this._processingThumbnail = true;
+      return this.createThumbnail(this._thumbnailQueue.shift(), (function(_this) {
+        return function() {
+          _this._processingThumbnail = false;
+          return _this._processThumbnailQueue();
+        };
+      })(this));
+    };
+
+    Dropzone.prototype.removeFile = function(file) {
+      if (file.status === Dropzone.UPLOADING) {
+        this.cancelUpload(file);
+      }
+      this.files = without(this.files, file);
+      this.emit("removedfile", file);
+      if (this.files.length === 0) {
+        return this.emit("reset");
+      }
+    };
+
+    Dropzone.prototype.removeAllFiles = function(cancelIfNecessary) {
+      var file, _i, _len, _ref;
+      if (cancelIfNecessary == null) {
+        cancelIfNecessary = false;
+      }
+      _ref = this.files.slice();
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        file = _ref[_i];
+        if (file.status !== Dropzone.UPLOADING || cancelIfNecessary) {
+          this.removeFile(file);
+        }
+      }
+      return null;
+    };
+
+    Dropzone.prototype.createThumbnail = function(file, callback) {
+      var fileReader;
+      fileReader = new FileReader;
+      fileReader.onload = (function(_this) {
+        return function() {
+          if (file.type === "image/svg+xml") {
+            _this.emit("thumbnail", file, fileReader.result);
+            if (callback != null) {
+              callback();
+            }
+            return;
+          }
+          return _this.createThumbnailFromUrl(file, fileReader.result, callback);
+        };
+      })(this);
+      return fileReader.readAsDataURL(file);
+    };
+
+    Dropzone.prototype.createThumbnailFromUrl = function(file, imageUrl, callback, crossOrigin) {
+      var img;
+      img = document.createElement("img");
+      if (crossOrigin) {
+        img.crossOrigin = crossOrigin;
+      }
+      img.onload = (function(_this) {
+        return function() {
+          var canvas, ctx, resizeInfo, thumbnail, _ref, _ref1, _ref2, _ref3;
+          file.width = img.width;
+          file.height = img.height;
+          resizeInfo = _this.options.resize.call(_this, file);
+          if (resizeInfo.trgWidth == null) {
+            resizeInfo.trgWidth = resizeInfo.optWidth;
+          }
+          if (resizeInfo.trgHeight == null) {
+            resizeInfo.trgHeight = resizeInfo.optHeight;
+          }
+          canvas = document.createElement("canvas");
+          ctx = canvas.getContext("2d");
+          canvas.width = resizeInfo.trgWidth;
+          canvas.height = resizeInfo.trgHeight;
+          drawImageIOSFix(ctx, img, (_ref = resizeInfo.srcX) != null ? _ref : 0, (_ref1 = resizeInfo.srcY) != null ? _ref1 : 0, resizeInfo.srcWidth, resizeInfo.srcHeight, (_ref2 = resizeInfo.trgX) != null ? _ref2 : 0, (_ref3 = resizeInfo.trgY) != null ? _ref3 : 0, resizeInfo.trgWidth, resizeInfo.trgHeight);
+          thumbnail = canvas.toDataURL("image/png");
+          _this.emit("thumbnail", file, thumbnail);
+          if (callback != null) {
+            return callback();
+          }
+        };
+      })(this);
+      if (callback != null) {
+        img.onerror = callback;
+      }
+      return img.src = imageUrl;
+    };
+
+    Dropzone.prototype.processQueue = function() {
+      var i, parallelUploads, processingLength, queuedFiles;
+      parallelUploads = this.options.parallelUploads;
+      processingLength = this.getUploadingFiles().length;
+      i = processingLength;
+      if (processingLength >= parallelUploads) {
+        return;
+      }
+      queuedFiles = this.getQueuedFiles();
+      if (!(queuedFiles.length > 0)) {
+        return;
+      }
+      if (this.options.uploadMultiple) {
+        return this.processFiles(queuedFiles.slice(0, parallelUploads - processingLength));
+      } else {
+        while (i < parallelUploads) {
+          if (!queuedFiles.length) {
+            return;
+          }
+          this.processFile(queuedFiles.shift());
+          i++;
+        }
+      }
+    };
+
+    Dropzone.prototype.processFile = function(file) {
+      return this.processFiles([file]);
+    };
+
+    Dropzone.prototype.processFiles = function(files) {
+      var file, _i, _len;
+      for (_i = 0, _len = files.length; _i < _len; _i++) {
+        file = files[_i];
+        file.processing = true;
+        file.status = Dropzone.UPLOADING;
+        this.emit("processing", file);
+      }
+      if (this.options.uploadMultiple) {
+        this.emit("processingmultiple", files);
+      }
+      return this.uploadFiles(files);
+    };
+
+    Dropzone.prototype._getFilesWithXhr = function(xhr) {
+      var file, files;
+      return files = (function() {
+        var _i, _len, _ref, _results;
+        _ref = this.files;
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          file = _ref[_i];
+          if (file.xhr === xhr) {
+            _results.push(file);
+          }
+        }
+        return _results;
+      }).call(this);
+    };
+
+    Dropzone.prototype.cancelUpload = function(file) {
+      var groupedFile, groupedFiles, _i, _j, _len, _len1, _ref;
+      if (file.status === Dropzone.UPLOADING) {
+        groupedFiles = this._getFilesWithXhr(file.xhr);
+        for (_i = 0, _len = groupedFiles.length; _i < _len; _i++) {
+          groupedFile = groupedFiles[_i];
+          groupedFile.status = Dropzone.CANCELED;
+        }
+        file.xhr.abort();
+        for (_j = 0, _len1 = groupedFiles.length; _j < _len1; _j++) {
+          groupedFile = groupedFiles[_j];
+          this.emit("canceled", groupedFile);
+        }
+        if (this.options.uploadMultiple) {
+          this.emit("canceledmultiple", groupedFiles);
+        }
+      } else if ((_ref = file.status) === Dropzone.ADDED || _ref === Dropzone.QUEUED) {
+        file.status = Dropzone.CANCELED;
+        this.emit("canceled", file);
+        if (this.options.uploadMultiple) {
+          this.emit("canceledmultiple", [file]);
+        }
+      }
+      if (this.options.autoProcessQueue) {
+        return this.processQueue();
+      }
+    };
+
+    resolveOption = function() {
+      var args, option;
+      option = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
+      if (typeof option === 'function') {
+        return option.apply(this, args);
+      }
+      return option;
+    };
+
+    Dropzone.prototype.uploadFile = function(file) {
+      return this.uploadFiles([file]);
+    };
+
+    Dropzone.prototype.uploadFiles = function(files) {
+      var file, formData, handleError, headerName, headerValue, headers, i, input, inputName, inputType, key, method, option, progressObj, response, updateProgress, url, value, xhr, _i, _j, _k, _l, _len, _len1, _len2, _len3, _m, _ref, _ref1, _ref2, _ref3, _ref4, _ref5;
+      xhr = new XMLHttpRequest();
+      for (_i = 0, _len = files.length; _i < _len; _i++) {
+        file = files[_i];
+        file.xhr = xhr;
+      }
+      method = resolveOption(this.options.method, files);
+      url = resolveOption(this.options.url, files);
+      xhr.open(method, url, true);
+      xhr.withCredentials = !!this.options.withCredentials;
+      response = null;
+      handleError = (function(_this) {
+        return function() {
+          var _j, _len1, _results;
+          _results = [];
+          for (_j = 0, _len1 = files.length; _j < _len1; _j++) {
+            file = files[_j];
+            _results.push(_this._errorProcessing(files, response || _this.options.dictResponseError.replace("{{statusCode}}", xhr.status), xhr));
+          }
+          return _results;
+        };
+      })(this);
+      updateProgress = (function(_this) {
+        return function(e) {
+          var allFilesFinished, progress, _j, _k, _l, _len1, _len2, _len3, _results;
+          if (e != null) {
+            progress = 100 * e.loaded / e.total;
+            for (_j = 0, _len1 = files.length; _j < _len1; _j++) {
+              file = files[_j];
+              file.upload = {
+                progress: progress,
+                total: e.total,
+                bytesSent: e.loaded
+              };
+            }
+          } else {
+            allFilesFinished = true;
+            progress = 100;
+            for (_k = 0, _len2 = files.length; _k < _len2; _k++) {
+              file = files[_k];
+              if (!(file.upload.progress === 100 && file.upload.bytesSent === file.upload.total)) {
+                allFilesFinished = false;
+              }
+              file.upload.progress = progress;
+              file.upload.bytesSent = file.upload.total;
+            }
+            if (allFilesFinished) {
+              return;
+            }
+          }
+          _results = [];
+          for (_l = 0, _len3 = files.length; _l < _len3; _l++) {
+            file = files[_l];
+            _results.push(_this.emit("uploadprogress", file, progress, file.upload.bytesSent));
+          }
+          return _results;
+        };
+      })(this);
+      xhr.onload = (function(_this) {
+        return function(e) {
+          var _ref;
+          if (files[0].status === Dropzone.CANCELED) {
+            return;
+          }
+          if (xhr.readyState !== 4) {
+            return;
+          }
+          response = xhr.responseText;
+          if (xhr.getResponseHeader("content-type") && ~xhr.getResponseHeader("content-type").indexOf("application/json")) {
+            try {
+              response = JSON.parse(response);
+            } catch (_error) {
+              e = _error;
+              response = "Invalid JSON response from server.";
+            }
+          }
+          updateProgress();
+          if (!((200 <= (_ref = xhr.status) && _ref < 300))) {
+            return handleError();
+          } else {
+            return _this._finished(files, response, e);
+          }
+        };
+      })(this);
+      xhr.onerror = (function(_this) {
+        return function() {
+          if (files[0].status === Dropzone.CANCELED) {
+            return;
+          }
+          return handleError();
+        };
+      })(this);
+      progressObj = (_ref = xhr.upload) != null ? _ref : xhr;
+      progressObj.onprogress = updateProgress;
+      headers = {
+        "Accept": "application/json",
+        "Cache-Control": "no-cache",
+        "X-Requested-With": "XMLHttpRequest"
+      };
+      if (this.options.headers) {
+        extend(headers, this.options.headers);
+      }
+      for (headerName in headers) {
+        headerValue = headers[headerName];
+        if (headerValue) {
+          xhr.setRequestHeader(headerName, headerValue);
+        }
+      }
+      formData = new FormData();
+      if (this.options.params) {
+        _ref1 = this.options.params;
+        for (key in _ref1) {
+          value = _ref1[key];
+          formData.append(key, value);
+        }
+      }
+      for (_j = 0, _len1 = files.length; _j < _len1; _j++) {
+        file = files[_j];
+        this.emit("sending", file, xhr, formData);
+      }
+      if (this.options.uploadMultiple) {
+        this.emit("sendingmultiple", files, xhr, formData);
+      }
+      if (this.element.tagName === "FORM") {
+        _ref2 = this.element.querySelectorAll("input, textarea, select, button");
+        for (_k = 0, _len2 = _ref2.length; _k < _len2; _k++) {
+          input = _ref2[_k];
+          inputName = input.getAttribute("name");
+          inputType = input.getAttribute("type");
+          if (input.tagName === "SELECT" && input.hasAttribute("multiple")) {
+            _ref3 = input.options;
+            for (_l = 0, _len3 = _ref3.length; _l < _len3; _l++) {
+              option = _ref3[_l];
+              if (option.selected) {
+                formData.append(inputName, option.value);
+              }
+            }
+          } else if (!inputType || ((_ref4 = inputType.toLowerCase()) !== "checkbox" && _ref4 !== "radio") || input.checked) {
+            formData.append(inputName, input.value);
+          }
+        }
+      }
+      for (i = _m = 0, _ref5 = files.length - 1; 0 <= _ref5 ? _m <= _ref5 : _m >= _ref5; i = 0 <= _ref5 ? ++_m : --_m) {
+        formData.append(this._getParamName(i), files[i], this._renameFilename(files[i].name));
+      }
+      return this.submitRequest(xhr, formData, files);
+    };
+
+    Dropzone.prototype.submitRequest = function(xhr, formData, files) {
+      return xhr.send(formData);
+    };
+
+    Dropzone.prototype._finished = function(files, responseText, e) {
+      var file, _i, _len;
+      for (_i = 0, _len = files.length; _i < _len; _i++) {
+        file = files[_i];
+        file.status = Dropzone.SUCCESS;
+        this.emit("success", file, responseText, e);
+        this.emit("complete", file);
+      }
+      if (this.options.uploadMultiple) {
+        this.emit("successmultiple", files, responseText, e);
+        this.emit("completemultiple", files);
+      }
+      if (this.options.autoProcessQueue) {
+        return this.processQueue();
+      }
+    };
+
+    Dropzone.prototype._errorProcessing = function(files, message, xhr) {
+      var file, _i, _len;
+      for (_i = 0, _len = files.length; _i < _len; _i++) {
+        file = files[_i];
+        file.status = Dropzone.ERROR;
+        this.emit("error", file, message, xhr);
+        this.emit("complete", file);
+      }
+      if (this.options.uploadMultiple) {
+        this.emit("errormultiple", files, message, xhr);
+        this.emit("completemultiple", files);
+      }
+      if (this.options.autoProcessQueue) {
+        return this.processQueue();
+      }
+    };
+
+    return Dropzone;
+
+  })(Emitter);
+
+  Dropzone.version = "4.3.0";
+
+  Dropzone.options = {};
+
+  Dropzone.optionsForElement = function(element) {
+    if (element.getAttribute("id")) {
+      return Dropzone.options[camelize(element.getAttribute("id"))];
+    } else {
+      return void 0;
+    }
+  };
+
+  Dropzone.instances = [];
+
+  Dropzone.forElement = function(element) {
+    if (typeof element === "string") {
+      element = document.querySelector(element);
+    }
+    if ((element != null ? element.dropzone : void 0) == null) {
+      throw new Error("No Dropzone found for given element. This is probably because you're trying to access it before Dropzone had the time to initialize. Use the `init` option to setup any additional observers on your Dropzone.");
+    }
+    return element.dropzone;
+  };
+
+  Dropzone.autoDiscover = true;
+
+  Dropzone.discover = function() {
+    var checkElements, dropzone, dropzones, _i, _len, _results;
+    if (document.querySelectorAll) {
+      dropzones = document.querySelectorAll(".dropzone");
+    } else {
+      dropzones = [];
+      checkElements = function(elements) {
+        var el, _i, _len, _results;
+        _results = [];
+        for (_i = 0, _len = elements.length; _i < _len; _i++) {
+          el = elements[_i];
+          if (/(^| )dropzone($| )/.test(el.className)) {
+            _results.push(dropzones.push(el));
+          } else {
+            _results.push(void 0);
+          }
+        }
+        return _results;
+      };
+      checkElements(document.getElementsByTagName("div"));
+      checkElements(document.getElementsByTagName("form"));
+    }
+    _results = [];
+    for (_i = 0, _len = dropzones.length; _i < _len; _i++) {
+      dropzone = dropzones[_i];
+      if (Dropzone.optionsForElement(dropzone) !== false) {
+        _results.push(new Dropzone(dropzone));
+      } else {
+        _results.push(void 0);
+      }
+    }
+    return _results;
+  };
+
+  Dropzone.blacklistedBrowsers = [/opera.*Macintosh.*version\/12/i];
+
+  Dropzone.isBrowserSupported = function() {
+    var capableBrowser, regex, _i, _len, _ref;
+    capableBrowser = true;
+    if (window.File && window.FileReader && window.FileList && window.Blob && window.FormData && document.querySelector) {
+      if (!("classList" in document.createElement("a"))) {
+        capableBrowser = false;
+      } else {
+        _ref = Dropzone.blacklistedBrowsers;
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          regex = _ref[_i];
+          if (regex.test(navigator.userAgent)) {
+            capableBrowser = false;
+            continue;
+          }
+        }
+      }
+    } else {
+      capableBrowser = false;
+    }
+    return capableBrowser;
+  };
+
+  without = function(list, rejectedItem) {
+    var item, _i, _len, _results;
+    _results = [];
+    for (_i = 0, _len = list.length; _i < _len; _i++) {
+      item = list[_i];
+      if (item !== rejectedItem) {
+        _results.push(item);
+      }
+    }
+    return _results;
+  };
+
+  camelize = function(str) {
+    return str.replace(/[\-_](\w)/g, function(match) {
+      return match.charAt(1).toUpperCase();
+    });
+  };
+
+  Dropzone.createElement = function(string) {
+    var div;
+    div = document.createElement("div");
+    div.innerHTML = string;
+    return div.childNodes[0];
+  };
+
+  Dropzone.elementInside = function(element, container) {
+    if (element === container) {
+      return true;
+    }
+    while (element = element.parentNode) {
+      if (element === container) {
+        return true;
+      }
+    }
+    return false;
+  };
+
+  Dropzone.getElement = function(el, name) {
+    var element;
+    if (typeof el === "string") {
+      element = document.querySelector(el);
+    } else if (el.nodeType != null) {
+      element = el;
+    }
+    if (element == null) {
+      throw new Error("Invalid `" + name + "` option provided. Please provide a CSS selector or a plain HTML element.");
+    }
+    return element;
+  };
+
+  Dropzone.getElements = function(els, name) {
+    var e, el, elements, _i, _j, _len, _len1, _ref;
+    if (els instanceof Array) {
+      elements = [];
+      try {
+        for (_i = 0, _len = els.length; _i < _len; _i++) {
+          el = els[_i];
+          elements.push(this.getElement(el, name));
+        }
+      } catch (_error) {
+        e = _error;
+        elements = null;
+      }
+    } else if (typeof els === "string") {
+      elements = [];
+      _ref = document.querySelectorAll(els);
+      for (_j = 0, _len1 = _ref.length; _j < _len1; _j++) {
+        el = _ref[_j];
+        elements.push(el);
+      }
+    } else if (els.nodeType != null) {
+      elements = [els];
+    }
+    if (!((elements != null) && elements.length)) {
+      throw new Error("Invalid `" + name + "` option provided. Please provide a CSS selector, a plain HTML element or a list of those.");
+    }
+    return elements;
+  };
+
+  Dropzone.confirm = function(question, accepted, rejected) {
+    if (window.confirm(question)) {
+      return accepted();
+    } else if (rejected != null) {
+      return rejected();
+    }
+  };
+
+  Dropzone.isValidFile = function(file, acceptedFiles) {
+    var baseMimeType, mimeType, validType, _i, _len;
+    if (!acceptedFiles) {
+      return true;
+    }
+    acceptedFiles = acceptedFiles.split(",");
+    mimeType = file.type;
+    baseMimeType = mimeType.replace(/\/.*$/, "");
+    for (_i = 0, _len = acceptedFiles.length; _i < _len; _i++) {
+      validType = acceptedFiles[_i];
+      validType = validType.trim();
+      if (validType.charAt(0) === ".") {
+        if (file.name.toLowerCase().indexOf(validType.toLowerCase(), file.name.length - validType.length) !== -1) {
+          return true;
+        }
+      } else if (/\/\*$/.test(validType)) {
+        if (baseMimeType === validType.replace(/\/.*$/, "")) {
+          return true;
+        }
+      } else {
+        if (mimeType === validType) {
+          return true;
+        }
+      }
+    }
+    return false;
+  };
+
+  if (typeof jQuery !== "undefined" && jQuery !== null) {
+    jQuery.fn.dropzone = function(options) {
+      return this.each(function() {
+        return new Dropzone(this, options);
+      });
+    };
+  }
+
+  if (typeof module !== "undefined" && module !== null) {
+    module.exports = Dropzone;
+  } else {
+    window.Dropzone = Dropzone;
+  }
+
+  Dropzone.ADDED = "added";
+
+  Dropzone.QUEUED = "queued";
+
+  Dropzone.ACCEPTED = Dropzone.QUEUED;
+
+  Dropzone.UPLOADING = "uploading";
+
+  Dropzone.PROCESSING = Dropzone.UPLOADING;
+
+  Dropzone.CANCELED = "canceled";
+
+  Dropzone.ERROR = "error";
+
+  Dropzone.SUCCESS = "success";
+
+
+  /*
+  
+  Bugfix for iOS 6 and 7
+  Source: http://stackoverflow.com/questions/11929099/html5-canvas-drawimage-ratio-bug-ios
+  based on the work of https://github.com/stomita/ios-imagefile-megapixel
+   */
+
+  detectVerticalSquash = function(img) {
+    var alpha, canvas, ctx, data, ey, ih, iw, py, ratio, sy;
+    iw = img.naturalWidth;
+    ih = img.naturalHeight;
+    canvas = document.createElement("canvas");
+    canvas.width = 1;
+    canvas.height = ih;
+    ctx = canvas.getContext("2d");
+    ctx.drawImage(img, 0, 0);
+    data = ctx.getImageData(0, 0, 1, ih).data;
+    sy = 0;
+    ey = ih;
+    py = ih;
+    while (py > sy) {
+      alpha = data[(py - 1) * 4 + 3];
+      if (alpha === 0) {
+        ey = py;
+      } else {
+        sy = py;
+      }
+      py = (ey + sy) >> 1;
+    }
+    ratio = py / ih;
+    if (ratio === 0) {
+      return 1;
+    } else {
+      return ratio;
+    }
+  };
+
+  drawImageIOSFix = function(ctx, img, sx, sy, sw, sh, dx, dy, dw, dh) {
+    var vertSquashRatio;
+    vertSquashRatio = detectVerticalSquash(img);
+    return ctx.drawImage(img, sx, sy, sw, sh, dx, dy, dw, dh / vertSquashRatio);
+  };
+
+
+  /*
+   * contentloaded.js
+   *
+   * Author: Diego Perini (diego.perini at gmail.com)
+   * Summary: cross-browser wrapper for DOMContentLoaded
+   * Updated: 20101020
+   * License: MIT
+   * Version: 1.2
+   *
+   * URL:
+   * http://javascript.nwbox.com/ContentLoaded/
+   * http://javascript.nwbox.com/ContentLoaded/MIT-LICENSE
+   */
+
+  contentLoaded = function(win, fn) {
+    var add, doc, done, init, poll, pre, rem, root, top;
+    done = false;
+    top = true;
+    doc = win.document;
+    root = doc.documentElement;
+    add = (doc.addEventListener ? "addEventListener" : "attachEvent");
+    rem = (doc.addEventListener ? "removeEventListener" : "detachEvent");
+    pre = (doc.addEventListener ? "" : "on");
+    init = function(e) {
+      if (e.type === "readystatechange" && doc.readyState !== "complete") {
+        return;
+      }
+      (e.type === "load" ? win : doc)[rem](pre + e.type, init, false);
+      if (!done && (done = true)) {
+        return fn.call(win, e.type || e);
+      }
+    };
+    poll = function() {
+      var e;
+      try {
+        root.doScroll("left");
+      } catch (_error) {
+        e = _error;
+        setTimeout(poll, 50);
+        return;
+      }
+      return init("poll");
+    };
+    if (doc.readyState !== "complete") {
+      if (doc.createEventObject && root.doScroll) {
+        try {
+          top = !win.frameElement;
+        } catch (_error) {}
+        if (top) {
+          poll();
+        }
+      }
+      doc[add](pre + "DOMContentLoaded", init, false);
+      doc[add](pre + "readystatechange", init, false);
+      return win[add](pre + "load", init, false);
+    }
+  };
+
+  Dropzone._autoDiscoverFunction = function() {
+    if (Dropzone.autoDiscover) {
+      return Dropzone.discover();
+    }
+  };
+
+  contentLoaded(window, Dropzone._autoDiscoverFunction);
+
+}).call(this);
+
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0), __webpack_require__(8)(module)))
 
 /***/ }),
 /* 4 */
@@ -10382,6 +12159,18 @@ $.fn.api.settings.api = api;
 
 /***/ }),
 /* 5 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(jQuery) { /*
@@ -10404,6 +12193,34 @@ t+=" .ui.visible."+a+".sidebar ~ .fixed, .ui.visible."+a+".sidebar ~ .pusher {  
 console.table?console.table(c):e.each(c,function(e,t){console.log(t.Name+": "+t["Execution Time"]+"ms")}),console.groupEnd()),c=[]}},invoke:function(t,n,o){var r,s,l,c=D;return n=n||f,o=O||o,"string"==typeof t&&c!==i&&(t=t.split(/[\. ]/),r=t.length-1,e.each(t,function(n,o){var a=n!=r?o+t[n+1].charAt(0).toUpperCase()+t[n+1].slice(1):t;if(e.isPlainObject(c[a])&&n!=r)c=c[a];else{if(c[a]!==i)return s=c[a],!1;if(!e.isPlainObject(c[o])||n==r)return c[o]!==i?(s=c[o],!1):(b.error(S.method,t),!1);c=c[o]}})),e.isFunction(s)?l=s.apply(o,n):s!==i&&(l=s),e.isArray(a)?a.push(l):a!==i?a=[a,l]:l!==i&&(a=l),s}},d?(D===i&&b.initialize(),b.invoke(u)):(D!==i&&D.invoke("destroy"),b.initialize())}),a!==i?a:this},e.tab=function(){e(t).tab.apply(this,arguments)},e.fn.tab.settings={name:"Tab",namespace:"tab",silent:!1,debug:!1,verbose:!1,performance:!0,auto:!1,history:!1,historyType:"hash",path:!1,context:!1,childrenOnly:!1,maxDepth:25,deactivate:"siblings",alwaysRefresh:!1,cache:!0,loadOnce:!1,cacheType:"response",ignoreFirstLoad:!1,apiSettings:!1,evaluateScripts:"once",onFirstLoad:function(e,t,n){},onLoad:function(e,t,n){},onVisible:function(e,t,n){},onRequest:function(e,t,n){},templates:{determineTitle:function(e){}},error:{api:"You attempted to load content without API module",method:"The method you called is not defined",missingTab:"Activated tab cannot be found. Tabs are case-sensitive.",noContent:"The tab you specified is missing a content url.",path:"History enabled, but no path was specified",recursion:"Max recursive depth reached",legacyInit:"onTabInit has been renamed to onFirstLoad in 2.0, please adjust your code.",legacyLoad:"onTabLoad has been renamed to onLoad in 2.0. Please adjust your code",state:"History requires Asual's Address library <https://github.com/asual/jquery-address>"},metadata:{tab:"tab",loaded:"loaded",promise:"promise"},className:{loading:"loading",active:"active"},selector:{tabs:".ui.tab",ui:".ui"}}}(jQuery,window,document),function(e,t,n,i){"use strict";t="undefined"!=typeof t&&t.Math==Math?t:"undefined"!=typeof self&&self.Math==Math?self:Function("return this")(),e.fn.transition=function(){var o,a=e(this),r=a.selector||"",s=(new Date).getTime(),l=[],c=arguments,u=c[0],d=[].slice.call(arguments,1),f="string"==typeof u;t.requestAnimationFrame||t.mozRequestAnimationFrame||t.webkitRequestAnimationFrame||t.msRequestAnimationFrame||function(e){setTimeout(e,0)};return a.each(function(t){var m,g,p,h,v,b,y,x,C,w=e(this),k=this;C={initialize:function(){m=C.get.settings.apply(k,c),h=m.className,p=m.error,v=m.metadata,x="."+m.namespace,y="module-"+m.namespace,g=w.data(y)||C,b=C.get.animationEndEvent(),f&&(f=C.invoke(u)),f===!1&&(C.verbose("Converted arguments into settings object",m),m.interval?C.delay(m.animate):C.animate(),C.instantiate())},instantiate:function(){C.verbose("Storing instance of module",C),g=C,w.data(y,g)},destroy:function(){C.verbose("Destroying previous module for",k),w.removeData(y)},refresh:function(){C.verbose("Refreshing display type on next animation"),delete C.displayType},forceRepaint:function(){C.verbose("Forcing element repaint");var e=w.parent(),t=w.next();0===t.length?w.detach().appendTo(e):w.detach().insertBefore(t)},repaint:function(){C.verbose("Repainting element");k.offsetWidth},delay:function(e){var n,o,r=C.get.animationDirection();r||(r=C.can.transition()?C.get.direction():"static"),e=e!==i?e:m.interval,n="auto"==m.reverse&&r==h.outward,o=n||1==m.reverse?(a.length-t)*m.interval:t*m.interval,C.debug("Delaying animation by",o),setTimeout(C.animate,o)},animate:function(e){if(m=e||m,!C.is.supported())return C.error(p.support),!1;if(C.debug("Preparing animation",m.animation),C.is.animating()){if(m.queue)return!m.allowRepeats&&C.has.direction()&&C.is.occurring()&&C.queuing!==!0?C.debug("Animation is currently occurring, preventing queueing same animation",m.animation):C.queue(m.animation),!1;if(!m.allowRepeats&&C.is.occurring())return C.debug("Animation is already occurring, will not execute repeated animation",m.animation),!1;C.debug("New animation started, completing previous early",m.animation),g.complete()}C.can.animate()?C.set.animating(m.animation):C.error(p.noAnimation,m.animation,k)},reset:function(){C.debug("Resetting animation to beginning conditions"),C.remove.animationCallbacks(),C.restore.conditions(),C.remove.animating()},queue:function(e){C.debug("Queueing animation of",e),C.queuing=!0,w.one(b+".queue"+x,function(){C.queuing=!1,C.repaint(),C.animate.apply(this,m)})},complete:function(e){C.debug("Animation complete",m.animation),C.remove.completeCallback(),C.remove.failSafe(),C.is.looping()||(C.is.outward()?(C.verbose("Animation is outward, hiding element"),C.restore.conditions(),C.hide()):C.is.inward()?(C.verbose("Animation is outward, showing element"),C.restore.conditions(),C.show()):(C.verbose("Static animation completed"),C.restore.conditions(),m.onComplete.call(k)))},force:{visible:function(){var e=w.attr("style"),t=C.get.userStyle(),n=C.get.displayType(),o=t+"display: "+n+" !important;",a=w.css("display"),r=e===i||""===e;a!==n?(C.verbose("Overriding default display to show element",n),w.attr("style",o)):r&&w.removeAttr("style")},hidden:function(){var e=w.attr("style"),t=w.css("display"),n=e===i||""===e;"none"===t||C.is.hidden()?n&&w.removeAttr("style"):(C.verbose("Overriding default display to hide element"),w.css("display","none"))}},has:{direction:function(t){var n=!1;return t=t||m.animation,"string"==typeof t&&(t=t.split(" "),e.each(t,function(e,t){t!==h.inward&&t!==h.outward||(n=!0)})),n},inlineDisplay:function(){var t=w.attr("style")||"";return e.isArray(t.match(/display.*?;/,""))}},set:{animating:function(e){var t;C.remove.completeCallback(),e=e||m.animation,t=C.get.animationClass(e),C.save.animation(t),C.force.visible(),C.remove.hidden(),C.remove.direction(),C.start.animation(t)},duration:function(e,t){t=t||m.duration,t="number"==typeof t?t+"ms":t,(t||0===t)&&(C.verbose("Setting animation duration",t),w.css({"animation-duration":t}))},direction:function(e){e=e||C.get.direction(),e==h.inward?C.set.inward():C.set.outward()},looping:function(){C.debug("Transition set to loop"),w.addClass(h.looping)},hidden:function(){w.addClass(h.transition).addClass(h.hidden)},inward:function(){C.debug("Setting direction to inward"),w.removeClass(h.outward).addClass(h.inward)},outward:function(){C.debug("Setting direction to outward"),w.removeClass(h.inward).addClass(h.outward)},visible:function(){w.addClass(h.transition).addClass(h.visible)}},start:{animation:function(e){e=e||C.get.animationClass(),C.debug("Starting tween",e),w.addClass(e).one(b+".complete"+x,C.complete),m.useFailSafe&&C.add.failSafe(),C.set.duration(m.duration),m.onStart.call(k)}},save:{animation:function(e){C.cache||(C.cache={}),C.cache.animation=e},displayType:function(e){"none"!==e&&w.data(v.displayType,e)},transitionExists:function(t,n){e.fn.transition.exists[t]=n,C.verbose("Saving existence of transition",t,n)}},restore:{conditions:function(){var e=C.get.currentAnimation();e&&(w.removeClass(e),C.verbose("Removing animation class",C.cache)),C.remove.duration()}},add:{failSafe:function(){var e=C.get.duration();C.timer=setTimeout(function(){w.triggerHandler(b)},e+m.failSafeDelay),C.verbose("Adding fail safe timer",C.timer)}},remove:{animating:function(){w.removeClass(h.animating)},animationCallbacks:function(){C.remove.queueCallback(),C.remove.completeCallback()},queueCallback:function(){w.off(".queue"+x)},completeCallback:function(){w.off(".complete"+x)},display:function(){w.css("display","")},direction:function(){w.removeClass(h.inward).removeClass(h.outward)},duration:function(){w.css("animation-duration","")},failSafe:function(){C.verbose("Removing fail safe timer",C.timer),C.timer&&clearTimeout(C.timer)},hidden:function(){w.removeClass(h.hidden)},visible:function(){w.removeClass(h.visible)},looping:function(){C.debug("Transitions are no longer looping"),C.is.looping()&&(C.reset(),w.removeClass(h.looping))},transition:function(){w.removeClass(h.visible).removeClass(h.hidden)}},get:{settings:function(t,n,i){return"object"==typeof t?e.extend(!0,{},e.fn.transition.settings,t):"function"==typeof i?e.extend({},e.fn.transition.settings,{animation:t,onComplete:i,duration:n}):"string"==typeof n||"number"==typeof n?e.extend({},e.fn.transition.settings,{animation:t,duration:n}):"object"==typeof n?e.extend({},e.fn.transition.settings,n,{animation:t}):"function"==typeof n?e.extend({},e.fn.transition.settings,{animation:t,onComplete:n}):e.extend({},e.fn.transition.settings,{animation:t})},animationClass:function(e){var t=e||m.animation,n=C.can.transition()&&!C.has.direction()?C.get.direction()+" ":"";return h.animating+" "+h.transition+" "+n+t},currentAnimation:function(){return C.cache&&C.cache.animation!==i?C.cache.animation:!1},currentDirection:function(){return C.is.inward()?h.inward:h.outward},direction:function(){return C.is.hidden()||!C.is.visible()?h.inward:h.outward},animationDirection:function(t){var n;return t=t||m.animation,"string"==typeof t&&(t=t.split(" "),e.each(t,function(e,t){t===h.inward?n=h.inward:t===h.outward&&(n=h.outward)})),n?n:!1},duration:function(e){return e=e||m.duration,e===!1&&(e=w.css("animation-duration")||0),"string"==typeof e?e.indexOf("ms")>-1?parseFloat(e):1e3*parseFloat(e):e},displayType:function(e){return e=e!==i?e:!0,m.displayType?m.displayType:(e&&w.data(v.displayType)===i&&C.can.transition(!0),w.data(v.displayType))},userStyle:function(e){return e=e||w.attr("style")||"",e.replace(/display.*?;/,"")},transitionExists:function(t){return e.fn.transition.exists[t]},animationStartEvent:function(){var e,t=n.createElement("div"),o={animation:"animationstart",OAnimation:"oAnimationStart",MozAnimation:"mozAnimationStart",WebkitAnimation:"webkitAnimationStart"};for(e in o)if(t.style[e]!==i)return o[e];return!1},animationEndEvent:function(){var e,t=n.createElement("div"),o={animation:"animationend",OAnimation:"oAnimationEnd",MozAnimation:"mozAnimationEnd",WebkitAnimation:"webkitAnimationEnd"};for(e in o)if(t.style[e]!==i)return o[e];return!1}},can:{transition:function(t){var n,o,a,r,s,l,c=m.animation,u=C.get.transitionExists(c),d=C.get.displayType(!1);if(u===i||t){if(C.verbose("Determining whether animation exists"),n=w.attr("class"),o=w.prop("tagName"),a=e("<"+o+" />").addClass(n).insertAfter(w),r=a.addClass(c).removeClass(h.inward).removeClass(h.outward).addClass(h.animating).addClass(h.transition).css("animationName"),s=a.addClass(h.inward).css("animationName"),d||(d=a.attr("class",n).removeAttr("style").removeClass(h.hidden).removeClass(h.visible).show().css("display"),C.verbose("Determining final display state",d),C.save.displayType(d)),a.remove(),r!=s)C.debug("Direction exists for animation",c),l=!0;else{if("none"==r||!r)return void C.debug("No animation defined in css",c);C.debug("Static animation found",c,d),l=!1}C.save.transitionExists(c,l)}return u!==i?u:l},animate:function(){return C.can.transition()!==i}},is:{animating:function(){return w.hasClass(h.animating)},inward:function(){return w.hasClass(h.inward)},outward:function(){return w.hasClass(h.outward)},looping:function(){return w.hasClass(h.looping)},occurring:function(e){return e=e||m.animation,e="."+e.replace(" ","."),w.filter(e).length>0},visible:function(){return w.is(":visible")},hidden:function(){return"hidden"===w.css("visibility")},supported:function(){return b!==!1}},hide:function(){C.verbose("Hiding element"),C.is.animating()&&C.reset(),k.blur(),C.remove.display(),C.remove.visible(),C.set.hidden(),C.force.hidden(),m.onHide.call(k),m.onComplete.call(k)},show:function(e){C.verbose("Showing element",e),C.remove.hidden(),C.set.visible(),C.force.visible(),m.onShow.call(k),m.onComplete.call(k)},toggle:function(){C.is.visible()?C.hide():C.show()},stop:function(){C.debug("Stopping current animation"),w.triggerHandler(b)},stopAll:function(){C.debug("Stopping all animation"),C.remove.queueCallback(),w.triggerHandler(b)},clear:{queue:function(){C.debug("Clearing animation queue"),C.remove.queueCallback()}},enable:function(){C.verbose("Starting animation"),w.removeClass(h.disabled)},disable:function(){C.debug("Stopping animation"),w.addClass(h.disabled)},setting:function(t,n){if(C.debug("Changing setting",t,n),e.isPlainObject(t))e.extend(!0,m,t);else{if(n===i)return m[t];e.isPlainObject(m[t])?e.extend(!0,m[t],n):m[t]=n}},internal:function(t,n){if(e.isPlainObject(t))e.extend(!0,C,t);else{if(n===i)return C[t];C[t]=n}},debug:function(){!m.silent&&m.debug&&(m.performance?C.performance.log(arguments):(C.debug=Function.prototype.bind.call(console.info,console,m.name+":"),C.debug.apply(console,arguments)))},verbose:function(){!m.silent&&m.verbose&&m.debug&&(m.performance?C.performance.log(arguments):(C.verbose=Function.prototype.bind.call(console.info,console,m.name+":"),C.verbose.apply(console,arguments)))},error:function(){m.silent||(C.error=Function.prototype.bind.call(console.error,console,m.name+":"),C.error.apply(console,arguments))},performance:{log:function(e){var t,n,i;m.performance&&(t=(new Date).getTime(),i=s||t,n=t-i,s=t,l.push({Name:e[0],Arguments:[].slice.call(e,1)||"",Element:k,"Execution Time":n})),clearTimeout(C.performance.timer),C.performance.timer=setTimeout(C.performance.display,500)},display:function(){var t=m.name+":",n=0;s=!1,clearTimeout(C.performance.timer),e.each(l,function(e,t){n+=t["Execution Time"]}),t+=" "+n+"ms",r&&(t+=" '"+r+"'"),a.length>1&&(t+=" ("+a.length+")"),(console.group!==i||console.table!==i)&&l.length>0&&(console.groupCollapsed(t),console.table?console.table(l):e.each(l,function(e,t){console.log(t.Name+": "+t["Execution Time"]+"ms")}),console.groupEnd()),l=[]}},invoke:function(t,n,a){var r,s,l,c=g;return n=n||d,a=k||a,"string"==typeof t&&c!==i&&(t=t.split(/[\. ]/),r=t.length-1,e.each(t,function(n,o){var a=n!=r?o+t[n+1].charAt(0).toUpperCase()+t[n+1].slice(1):t;if(e.isPlainObject(c[a])&&n!=r)c=c[a];else{if(c[a]!==i)return s=c[a],!1;if(!e.isPlainObject(c[o])||n==r)return c[o]!==i?(s=c[o],!1):!1;c=c[o]}})),e.isFunction(s)?l=s.apply(a,n):s!==i&&(l=s),e.isArray(o)?o.push(l):o!==i?o=[o,l]:l!==i&&(o=l),s!==i?s:!1}},C.initialize()}),o!==i?o:this},e.fn.transition.exists={},e.fn.transition.settings={name:"Transition",silent:!1,debug:!1,verbose:!1,performance:!0,namespace:"transition",interval:0,reverse:"auto",onStart:function(){},onComplete:function(){},onShow:function(){},onHide:function(){},useFailSafe:!0,failSafeDelay:100,allowRepeats:!1,displayType:!1,animation:"fade",duration:!1,queue:!0,metadata:{displayType:"display"},className:{animating:"animating",disabled:"disabled",hidden:"hidden",inward:"in",loading:"loading",looping:"looping",outward:"out",transition:"transition",visible:"visible"},error:{noAnimation:"Element is no longer attached to DOM. Unable to animate.  Use silent setting to surpress this warning in production.",repeated:"That animation is already occurring, cancelling repeated animation",method:"The method you called is not defined",support:"This browser does not support CSS animations"}}}(jQuery,window,document),function(e,t,n,i){"use strict";var t="undefined"!=typeof t&&t.Math==Math?t:"undefined"!=typeof self&&self.Math==Math?self:Function("return this")();e.api=e.fn.api=function(n){var o,a=e(e.isFunction(this)?t:this),r=a.selector||"",s=(new Date).getTime(),l=[],c=arguments[0],u="string"==typeof c,d=[].slice.call(arguments,1);return a.each(function(){var a,f,m,g,p,h,v=e.isPlainObject(n)?e.extend(!0,{},e.fn.api.settings,n):e.extend({},e.fn.api.settings),b=v.namespace,y=v.metadata,x=v.selector,C=v.error,w=v.className,k="."+b,S="module-"+b,T=e(this),A=T.closest(x.form),R=v.stateContext?e(v.stateContext):T,P=this,E=R[0],F=T.data(S);h={initialize:function(){u||h.bind.events(),h.instantiate()},instantiate:function(){h.verbose("Storing instance of module",h),F=h,T.data(S,F)},destroy:function(){h.verbose("Destroying previous module for",P),T.removeData(S).off(k)},bind:{events:function(){var e=h.get.event();e?(h.verbose("Attaching API events to element",e),T.on(e+k,h.event.trigger)):"now"==v.on&&(h.debug("Querying API endpoint immediately"),h.query())}},decode:{json:function(e){if(e!==i&&"string"==typeof e)try{e=JSON.parse(e)}catch(t){}return e}},read:{cachedResponse:function(e){var n;return t.Storage===i?void h.error(C.noStorage):(n=sessionStorage.getItem(e),h.debug("Using cached response",e,n),n=h.decode.json(n))}},write:{cachedResponse:function(n,o){return o&&""===o?void h.debug("Response empty, not caching",o):t.Storage===i?void h.error(C.noStorage):(e.isPlainObject(o)&&(o=JSON.stringify(o)),sessionStorage.setItem(n,o),void h.verbose("Storing cached response for url",n,o))}},query:function(){if(h.is.disabled())return void h.debug("Element is disabled API request aborted");if(h.is.loading()){if(!v.interruptRequests)return void h.debug("Cancelling request, previous request is still pending");h.debug("Interrupting previous request"),h.abort()}return v.defaultData&&e.extend(!0,v.urlData,h.get.defaultData()),v.serializeForm&&(v.data=h.add.formData(v.data)),f=h.get.settings(),f===!1?(h.cancelled=!0,void h.error(C.beforeSend)):(h.cancelled=!1,m=h.get.templatedURL(),m||h.is.mocked()?(m=h.add.urlData(m),m||h.is.mocked()?(f.url=v.base+m,a=e.extend(!0,{},v,{type:v.method||v.type,data:g,url:v.base+m,beforeSend:v.beforeXHR,success:function(){},failure:function(){},complete:function(){}}),h.debug("Querying URL",a.url),h.verbose("Using AJAX settings",a),"local"===v.cache&&h.read.cachedResponse(m)?(h.debug("Response returned from local cache"),h.request=h.create.request(),void h.request.resolveWith(E,[h.read.cachedResponse(m)])):void(v.throttle?v.throttleFirstRequest||h.timer?(h.debug("Throttling request",v.throttle),clearTimeout(h.timer),h.timer=setTimeout(function(){h.timer&&delete h.timer,h.debug("Sending throttled request",g,a.method),h.send.request()},v.throttle)):(h.debug("Sending request",g,a.method),h.send.request(),h.timer=setTimeout(function(){},v.throttle)):(h.debug("Sending request",g,a.method),h.send.request()))):void 0):void h.error(C.missingURL))},should:{removeError:function(){return v.hideError===!0||"auto"===v.hideError&&!h.is.form()}},is:{disabled:function(){return T.filter(x.disabled).length>0},expectingJSON:function(){return"json"===v.dataType||"jsonp"===v.dataType},form:function(){return T.is("form")||R.is("form")},mocked:function(){return v.mockResponse||v.mockResponseAsync||v.response||v.responseAsync},input:function(){return T.is("input")},loading:function(){return h.request?"pending"==h.request.state():!1},abortedRequest:function(e){return e&&e.readyState!==i&&0===e.readyState?(h.verbose("XHR request determined to be aborted"),!0):(h.verbose("XHR request was not aborted"),!1)},validResponse:function(t){return h.is.expectingJSON()&&e.isFunction(v.successTest)?(h.debug("Checking JSON returned success",v.successTest,t),v.successTest(t)?(h.debug("Response passed success test",t),!0):(h.debug("Response failed success test",t),!1)):(h.verbose("Response is not JSON, skipping validation",v.successTest,t),!0)}},was:{cancelled:function(){return h.cancelled||!1},succesful:function(){return h.request&&"resolved"==h.request.state()},failure:function(){return h.request&&"rejected"==h.request.state()},complete:function(){return h.request&&("resolved"==h.request.state()||"rejected"==h.request.state())}},add:{urlData:function(t,n){var o,a;return t&&(o=t.match(v.regExp.required),a=t.match(v.regExp.optional),n=n||v.urlData,o&&(h.debug("Looking for required URL variables",o),e.each(o,function(o,a){var r=-1!==a.indexOf("$")?a.substr(2,a.length-3):a.substr(1,a.length-2),s=e.isPlainObject(n)&&n[r]!==i?n[r]:T.data(r)!==i?T.data(r):R.data(r)!==i?R.data(r):n[r];return s===i?(h.error(C.requiredParameter,r,t),t=!1,!1):(h.verbose("Found required variable",r,s),s=v.encodeParameters?h.get.urlEncodedValue(s):s,t=t.replace(a,s),void 0)})),a&&(h.debug("Looking for optional URL variables",o),e.each(a,function(o,a){var r=-1!==a.indexOf("$")?a.substr(3,a.length-4):a.substr(2,a.length-3),s=e.isPlainObject(n)&&n[r]!==i?n[r]:T.data(r)!==i?T.data(r):R.data(r)!==i?R.data(r):n[r];s!==i?(h.verbose("Optional variable Found",r,s),t=t.replace(a,s)):(h.verbose("Optional variable not found",r),t=-1!==t.indexOf("/"+a)?t.replace("/"+a,""):t.replace(a,""))}))),t},formData:function(t){var n,o=e.fn.serializeObject!==i,a=o?A.serializeObject():A.serialize();return t=t||v.data,n=e.isPlainObject(t),n?o?(h.debug("Extending existing data with form data",t,a),t=e.extend(!0,{},t,a)):(h.error(C.missingSerialize),h.debug("Cant extend data. Replacing data with form data",t,a),t=a):(h.debug("Adding form data",a),t=a),t}},send:{request:function(){h.set.loading(),h.request=h.create.request(),h.is.mocked()?h.mockedXHR=h.create.mockedXHR():h.xhr=h.create.xhr(),v.onRequest.call(E,h.request,h.xhr)}},event:{trigger:function(e){h.query(),"submit"!=e.type&&"click"!=e.type||e.preventDefault()},xhr:{always:function(){},done:function(t,n,i){var o=this,a=(new Date).getTime()-p,r=v.loadingDuration-a,s=e.isFunction(v.onResponse)?h.is.expectingJSON()?v.onResponse.call(o,e.extend(!0,{},t)):v.onResponse.call(o,t):!1;r=r>0?r:0,s&&(h.debug("Modified API response in onResponse callback",v.onResponse,s,t),t=s),r>0&&h.debug("Response completed early delaying state change by",r),setTimeout(function(){h.is.validResponse(t)?h.request.resolveWith(o,[t,i]):h.request.rejectWith(o,[i,"invalid"])},r)},fail:function(e,t,n){var i=this,o=(new Date).getTime()-p,a=v.loadingDuration-o;a=a>0?a:0,a>0&&h.debug("Response completed early delaying state change by",a),setTimeout(function(){h.is.abortedRequest(e)?h.request.rejectWith(i,[e,"aborted",n]):h.request.rejectWith(i,[e,"error",t,n])},a)}},request:{done:function(e,t){h.debug("Successful API Response",e),"local"===v.cache&&m&&(h.write.cachedResponse(m,e),h.debug("Saving server response locally",h.cache)),v.onSuccess.call(E,e,T,t)},complete:function(e,t){var n,i;h.was.succesful()?(i=e,n=t):(n=e,i=h.get.responseFromXHR(n)),h.remove.loading(),v.onComplete.call(E,i,T,n)},fail:function(e,t,n){var o=h.get.responseFromXHR(e),r=h.get.errorFromRequest(o,t,n);return"aborted"==t?(h.debug("XHR Aborted (Most likely caused by page navigation or CORS Policy)",t,n),v.onAbort.call(E,t,T,e),!0):("invalid"==t?h.debug("JSON did not pass success test. A server-side error has most likely occurred",o):"error"==t&&e!==i&&(h.debug("XHR produced a server error",t,n),200!=e.status&&n!==i&&""!==n&&h.error(C.statusMessage+n,a.url),v.onError.call(E,r,T,e)),v.errorDuration&&"aborted"!==t&&(h.debug("Adding error state"),h.set.error(),h.should.removeError()&&setTimeout(h.remove.error,v.errorDuration)),h.debug("API Request failed",r,e),void v.onFailure.call(E,o,T,e))}}},create:{request:function(){return e.Deferred().always(h.event.request.complete).done(h.event.request.done).fail(h.event.request.fail)},mockedXHR:function(){var t,n,i,o=!1,a=!1,r=!1,s=v.mockResponse||v.response,l=v.mockResponseAsync||v.responseAsync;return i=e.Deferred().always(h.event.xhr.complete).done(h.event.xhr.done).fail(h.event.xhr.fail),s?(e.isFunction(s)?(h.debug("Using specified synchronous callback",s),n=s.call(E,f)):(h.debug("Using settings specified response",s),n=s),i.resolveWith(E,[n,o,{responseText:n}])):e.isFunction(l)&&(t=function(e){h.debug("Async callback returned response",e),e?i.resolveWith(E,[e,o,{responseText:e}]):i.rejectWith(E,[{responseText:e},a,r])},h.debug("Using specified async response callback",l),l.call(E,f,t)),i},xhr:function(){var t;return t=e.ajax(a).always(h.event.xhr.always).done(h.event.xhr.done).fail(h.event.xhr.fail),h.verbose("Created server request",t,a),t}},set:{error:function(){h.verbose("Adding error state to element",R),R.addClass(w.error)},loading:function(){h.verbose("Adding loading state to element",R),R.addClass(w.loading),p=(new Date).getTime()}},remove:{error:function(){h.verbose("Removing error state from element",R),R.removeClass(w.error)},loading:function(){h.verbose("Removing loading state from element",R),R.removeClass(w.loading)}},get:{responseFromXHR:function(t){return e.isPlainObject(t)?h.is.expectingJSON()?h.decode.json(t.responseText):t.responseText:!1},errorFromRequest:function(t,n,o){return e.isPlainObject(t)&&t.error!==i?t.error:v.error[n]!==i?v.error[n]:o},request:function(){return h.request||!1},xhr:function(){return h.xhr||!1},settings:function(){var t;return t=v.beforeSend.call(E,v),t&&(t.success!==i&&(h.debug("Legacy success callback detected",t),h.error(C.legacyParameters,t.success),t.onSuccess=t.success),t.failure!==i&&(h.debug("Legacy failure callback detected",t),h.error(C.legacyParameters,t.failure),t.onFailure=t.failure),t.complete!==i&&(h.debug("Legacy complete callback detected",t),h.error(C.legacyParameters,t.complete),t.onComplete=t.complete)),t===i&&h.error(C.noReturnedValue),t===!1?t:t!==i?e.extend(!0,{},t):e.extend(!0,{},v)},urlEncodedValue:function(e){var n=t.decodeURIComponent(e),i=t.encodeURIComponent(e),o=n!==e;return o?(h.debug("URL value is already encoded, avoiding double encoding",e),e):(h.verbose("Encoding value using encodeURIComponent",e,i),i)},defaultData:function(){var t={};return e.isWindow(P)||(h.is.input()?t.value=T.val():h.is.form()||(t.text=T.text())),t},event:function(){return e.isWindow(P)||"now"==v.on?(h.debug("API called without element, no events attached"),!1):"auto"==v.on?T.is("input")?P.oninput!==i?"input":P.onpropertychange!==i?"propertychange":"keyup":T.is("form")?"submit":"click":v.on},templatedURL:function(e){if(e=e||T.data(y.action)||v.action||!1,m=T.data(y.url)||v.url||!1)return h.debug("Using specified url",m),m;if(e){if(h.debug("Looking up url for action",e,v.api),v.api[e]===i&&!h.is.mocked())return void h.error(C.missingAction,v.action,v.api);m=v.api[e]}else h.is.form()&&(m=T.attr("action")||R.attr("action")||!1,h.debug("No url or action specified, defaulting to form action",m));return m}},abort:function(){var e=h.get.xhr();e&&"resolved"!==e.state()&&(h.debug("Cancelling API request"),e.abort())},reset:function(){h.remove.error(),h.remove.loading()},setting:function(t,n){if(h.debug("Changing setting",t,n),e.isPlainObject(t))e.extend(!0,v,t);else{if(n===i)return v[t];e.isPlainObject(v[t])?e.extend(!0,v[t],n):v[t]=n}},internal:function(t,n){if(e.isPlainObject(t))e.extend(!0,h,t);else{if(n===i)return h[t];h[t]=n}},debug:function(){!v.silent&&v.debug&&(v.performance?h.performance.log(arguments):(h.debug=Function.prototype.bind.call(console.info,console,v.name+":"),h.debug.apply(console,arguments)))},verbose:function(){!v.silent&&v.verbose&&v.debug&&(v.performance?h.performance.log(arguments):(h.verbose=Function.prototype.bind.call(console.info,console,v.name+":"),h.verbose.apply(console,arguments)))},error:function(){v.silent||(h.error=Function.prototype.bind.call(console.error,console,v.name+":"),h.error.apply(console,arguments))},performance:{log:function(e){var t,n,i;v.performance&&(t=(new Date).getTime(),i=s||t,n=t-i,s=t,l.push({Name:e[0],Arguments:[].slice.call(e,1)||"","Execution Time":n})),clearTimeout(h.performance.timer),h.performance.timer=setTimeout(h.performance.display,500)},display:function(){var t=v.name+":",n=0;s=!1,clearTimeout(h.performance.timer),e.each(l,function(e,t){n+=t["Execution Time"]}),t+=" "+n+"ms",r&&(t+=" '"+r+"'"),(console.group!==i||console.table!==i)&&l.length>0&&(console.groupCollapsed(t),console.table?console.table(l):e.each(l,function(e,t){console.log(t.Name+": "+t["Execution Time"]+"ms")}),console.groupEnd()),l=[]}},invoke:function(t,n,a){var r,s,l,c=F;return n=n||d,a=P||a,"string"==typeof t&&c!==i&&(t=t.split(/[\. ]/),r=t.length-1,e.each(t,function(n,o){var a=n!=r?o+t[n+1].charAt(0).toUpperCase()+t[n+1].slice(1):t;if(e.isPlainObject(c[a])&&n!=r)c=c[a];else{if(c[a]!==i)return s=c[a],!1;if(!e.isPlainObject(c[o])||n==r)return c[o]!==i?(s=c[o],!1):(h.error(C.method,t),!1);c=c[o]}})),e.isFunction(s)?l=s.apply(a,n):s!==i&&(l=s),e.isArray(o)?o.push(l):o!==i?o=[o,l]:l!==i&&(o=l),s}},u?(F===i&&h.initialize(),h.invoke(c)):(F!==i&&F.invoke("destroy"),h.initialize())}),o!==i?o:this},e.api.settings={name:"API",namespace:"api",debug:!1,verbose:!1,performance:!0,api:{},cache:!0,interruptRequests:!0,on:"auto",stateContext:!1,loadingDuration:0,hideError:"auto",errorDuration:2e3,encodeParameters:!0,action:!1,url:!1,base:"",urlData:{},defaultData:!0,serializeForm:!1,throttle:0,throttleFirstRequest:!0,method:"get",data:{},dataType:"json",mockResponse:!1,mockResponseAsync:!1,response:!1,responseAsync:!1,beforeSend:function(e){return e},beforeXHR:function(e){},onRequest:function(e,t){},onResponse:!1,onSuccess:function(e,t){},onComplete:function(e,t){},onFailure:function(e,t){},onError:function(e,t){},onAbort:function(e,t){},successTest:!1,error:{beforeSend:"The before send function has aborted the request",error:"There was an error with your request",exitConditions:"API Request Aborted. Exit conditions met",JSONParse:"JSON could not be parsed during error handling",legacyParameters:"You are using legacy API success callback names",method:"The method you called is not defined",missingAction:"API action used but no url was defined",missingSerialize:"jquery-serialize-object is required to add form data to an existing data object",missingURL:"No URL specified for api event",noReturnedValue:"The beforeSend callback must return a settings object, beforeSend ignored.",noStorage:"Caching responses locally requires session storage",parseError:"There was an error parsing your request",requiredParameter:"Missing a required URL parameter: ",statusMessage:"Server gave an error: ",timeout:"Your request timed out"},regExp:{required:/\{\$*[A-z0-9]+\}/g,optional:/\{\/\$*[A-z0-9]+\}/g},className:{loading:"loading",error:"error"},selector:{disabled:".disabled",form:"form"},metadata:{action:"action",url:"url"}}}(jQuery,window,document),function(e,t,n,i){"use strict";t="undefined"!=typeof t&&t.Math==Math?t:"undefined"!=typeof self&&self.Math==Math?self:Function("return this")(),e.fn.state=function(t){var o,a=e(this),r=a.selector||"",s=("ontouchstart"in n.documentElement,(new Date).getTime()),l=[],c=arguments[0],u="string"==typeof c,d=[].slice.call(arguments,1);return a.each(function(){var n,f=e.isPlainObject(t)?e.extend(!0,{},e.fn.state.settings,t):e.extend({},e.fn.state.settings),m=f.error,g=f.metadata,p=f.className,h=f.namespace,v=f.states,b=f.text,y="."+h,x=h+"-module",C=e(this),w=this,k=C.data(x);n={initialize:function(){n.verbose("Initializing module"),f.automatic&&n.add.defaults(),f.context&&""!==r?e(f.context).on(r,"mouseenter"+y,n.change.text).on(r,"mouseleave"+y,n.reset.text).on(r,"click"+y,n.toggle.state):C.on("mouseenter"+y,n.change.text).on("mouseleave"+y,n.reset.text).on("click"+y,n.toggle.state),n.instantiate()},instantiate:function(){n.verbose("Storing instance of module",n),k=n,C.data(x,n)},destroy:function(){n.verbose("Destroying previous module",k),C.off(y).removeData(x)},refresh:function(){n.verbose("Refreshing selector cache"),C=e(w)},add:{defaults:function(){var o=t&&e.isPlainObject(t.states)?t.states:{};e.each(f.defaults,function(t,a){n.is[t]!==i&&n.is[t]()&&(n.verbose("Adding default states",t,w),e.extend(f.states,a,o))})}},is:{active:function(){return C.hasClass(p.active)},loading:function(){return C.hasClass(p.loading)},inactive:function(){return!C.hasClass(p.active)},state:function(e){return p[e]===i?!1:C.hasClass(p[e])},enabled:function(){return!C.is(f.filter.active)},disabled:function(){return C.is(f.filter.active)},textEnabled:function(){return!C.is(f.filter.text)},button:function(){return C.is(".button:not(a, .submit)")},input:function(){return C.is("input")},progress:function(){return C.is(".ui.progress")}},allow:function(e){n.debug("Now allowing state",e),v[e]=!0},disallow:function(e){n.debug("No longer allowing",e),v[e]=!1},allows:function(e){return v[e]||!1},enable:function(){C.removeClass(p.disabled)},disable:function(){C.addClass(p.disabled)},setState:function(e){n.allows(e)&&C.addClass(p[e])},removeState:function(e){n.allows(e)&&C.removeClass(p[e])},toggle:{state:function(){var t,o;if(n.allows("active")&&n.is.enabled()){
 if(n.refresh(),e.fn.api!==i)if(t=C.api("get request"),o=C.api("was cancelled"))n.debug("API Request cancelled by beforesend"),f.activateTest=function(){return!1},f.deactivateTest=function(){return!1};else if(t)return void n.listenTo(t);n.change.state()}}},listenTo:function(t){n.debug("API request detected, waiting for state signal",t),t&&(b.loading&&n.update.text(b.loading),e.when(t).then(function(){"resolved"==t.state()?(n.debug("API request succeeded"),f.activateTest=function(){return!0},f.deactivateTest=function(){return!0}):(n.debug("API request failed"),f.activateTest=function(){return!1},f.deactivateTest=function(){return!1}),n.change.state()}))},change:{state:function(){n.debug("Determining state change direction"),n.is.inactive()?n.activate():n.deactivate(),f.sync&&n.sync(),f.onChange.call(w)},text:function(){n.is.textEnabled()&&(n.is.disabled()?(n.verbose("Changing text to disabled text",b.hover),n.update.text(b.disabled)):n.is.active()?b.hover?(n.verbose("Changing text to hover text",b.hover),n.update.text(b.hover)):b.deactivate&&(n.verbose("Changing text to deactivating text",b.deactivate),n.update.text(b.deactivate)):b.hover?(n.verbose("Changing text to hover text",b.hover),n.update.text(b.hover)):b.activate&&(n.verbose("Changing text to activating text",b.activate),n.update.text(b.activate)))}},activate:function(){f.activateTest.call(w)&&(n.debug("Setting state to active"),C.addClass(p.active),n.update.text(b.active),f.onActivate.call(w))},deactivate:function(){f.deactivateTest.call(w)&&(n.debug("Setting state to inactive"),C.removeClass(p.active),n.update.text(b.inactive),f.onDeactivate.call(w))},sync:function(){n.verbose("Syncing other buttons to current state"),n.is.active()?a.not(C).state("activate"):a.not(C).state("deactivate")},get:{text:function(){return f.selector.text?C.find(f.selector.text).text():C.html()},textFor:function(e){return b[e]||!1}},flash:{text:function(e,t,i){var o=n.get.text();n.debug("Flashing text message",e,t),e=e||f.text.flash,t=t||f.flashDuration,i=i||function(){},n.update.text(e),setTimeout(function(){n.update.text(o),i.call(w)},t)}},reset:{text:function(){var e=b.active||C.data(g.storedText),t=b.inactive||C.data(g.storedText);n.is.textEnabled()&&(n.is.active()&&e?(n.verbose("Resetting active text",e),n.update.text(e)):t&&(n.verbose("Resetting inactive text",e),n.update.text(t)))}},update:{text:function(e){var t=n.get.text();e&&e!==t?(n.debug("Updating text",e),f.selector.text?C.data(g.storedText,e).find(f.selector.text).text(e):C.data(g.storedText,e).html(e)):n.debug("Text is already set, ignoring update",e)}},setting:function(t,o){if(n.debug("Changing setting",t,o),e.isPlainObject(t))e.extend(!0,f,t);else{if(o===i)return f[t];e.isPlainObject(f[t])?e.extend(!0,f[t],o):f[t]=o}},internal:function(t,o){if(e.isPlainObject(t))e.extend(!0,n,t);else{if(o===i)return n[t];n[t]=o}},debug:function(){!f.silent&&f.debug&&(f.performance?n.performance.log(arguments):(n.debug=Function.prototype.bind.call(console.info,console,f.name+":"),n.debug.apply(console,arguments)))},verbose:function(){!f.silent&&f.verbose&&f.debug&&(f.performance?n.performance.log(arguments):(n.verbose=Function.prototype.bind.call(console.info,console,f.name+":"),n.verbose.apply(console,arguments)))},error:function(){f.silent||(n.error=Function.prototype.bind.call(console.error,console,f.name+":"),n.error.apply(console,arguments))},performance:{log:function(e){var t,i,o;f.performance&&(t=(new Date).getTime(),o=s||t,i=t-o,s=t,l.push({Name:e[0],Arguments:[].slice.call(e,1)||"",Element:w,"Execution Time":i})),clearTimeout(n.performance.timer),n.performance.timer=setTimeout(n.performance.display,500)},display:function(){var t=f.name+":",o=0;s=!1,clearTimeout(n.performance.timer),e.each(l,function(e,t){o+=t["Execution Time"]}),t+=" "+o+"ms",r&&(t+=" '"+r+"'"),(console.group!==i||console.table!==i)&&l.length>0&&(console.groupCollapsed(t),console.table?console.table(l):e.each(l,function(e,t){console.log(t.Name+": "+t["Execution Time"]+"ms")}),console.groupEnd()),l=[]}},invoke:function(t,a,r){var s,l,c,u=k;return a=a||d,r=w||r,"string"==typeof t&&u!==i&&(t=t.split(/[\. ]/),s=t.length-1,e.each(t,function(o,a){var r=o!=s?a+t[o+1].charAt(0).toUpperCase()+t[o+1].slice(1):t;if(e.isPlainObject(u[r])&&o!=s)u=u[r];else{if(u[r]!==i)return l=u[r],!1;if(!e.isPlainObject(u[a])||o==s)return u[a]!==i?(l=u[a],!1):(n.error(m.method,t),!1);u=u[a]}})),e.isFunction(l)?c=l.apply(r,a):l!==i&&(c=l),e.isArray(o)?o.push(c):o!==i?o=[o,c]:c!==i&&(o=c),l}},u?(k===i&&n.initialize(),n.invoke(c)):(k!==i&&k.invoke("destroy"),n.initialize())}),o!==i?o:this},e.fn.state.settings={name:"State",debug:!1,verbose:!1,namespace:"state",performance:!0,onActivate:function(){},onDeactivate:function(){},onChange:function(){},activateTest:function(){return!0},deactivateTest:function(){return!0},automatic:!0,sync:!1,flashDuration:1e3,filter:{text:".loading, .disabled",active:".disabled"},context:!1,error:{beforeSend:"The before send function has cancelled state change",method:"The method you called is not defined."},metadata:{promise:"promise",storedText:"stored-text"},className:{active:"active",disabled:"disabled",error:"error",loading:"loading",success:"success",warning:"warning"},selector:{text:!1},defaults:{input:{disabled:!0,loading:!0,active:!0},button:{disabled:!0,loading:!0,active:!0},progress:{active:!0,success:!0,warning:!0,error:!0}},states:{active:!0,disabled:!0,error:!0,loading:!0,success:!0,warning:!0},text:{disabled:!1,flash:!1,hover:!1,active:!1,inactive:!1,activate:!1,deactivate:!1}}}(jQuery,window,document),function(e,t,n,i){"use strict";t="undefined"!=typeof t&&t.Math==Math?t:"undefined"!=typeof self&&self.Math==Math?self:Function("return this")(),e.fn.visibility=function(o){var a,r=e(this),s=r.selector||"",l=(new Date).getTime(),c=[],u=arguments[0],d="string"==typeof u,f=[].slice.call(arguments,1),m=r.length,g=0;return r.each(function(){var r,p,h,v,b=e.isPlainObject(o)?e.extend(!0,{},e.fn.visibility.settings,o):e.extend({},e.fn.visibility.settings),y=b.className,x=b.namespace,C=b.error,w=b.metadata,k="."+x,S="module-"+x,T=e(t),A=e(this),R=e(b.context),P=(A.selector||"",A.data(S)),E=t.requestAnimationFrame||t.mozRequestAnimationFrame||t.webkitRequestAnimationFrame||t.msRequestAnimationFrame||function(e){setTimeout(e,0)},F=this,O=!1;v={initialize:function(){v.debug("Initializing",b),v.setup.cache(),v.should.trackChanges()&&("image"==b.type&&v.setup.image(),"fixed"==b.type&&v.setup.fixed(),b.observeChanges&&v.observeChanges(),v.bind.events()),v.save.position(),v.is.visible()||v.error(C.visible,A),b.initialCheck&&v.checkVisibility(),v.instantiate()},instantiate:function(){v.debug("Storing instance",v),A.data(S,v),P=v},destroy:function(){v.verbose("Destroying previous module"),h&&h.disconnect(),p&&p.disconnect(),T.off("load"+k,v.event.load).off("resize"+k,v.event.resize),R.off("scroll"+k,v.event.scroll).off("scrollchange"+k,v.event.scrollchange),"fixed"==b.type&&(v.resetFixed(),v.remove.placeholder()),A.off(k).removeData(S)},observeChanges:function(){"MutationObserver"in t&&(p=new MutationObserver(v.event.contextChanged),h=new MutationObserver(v.event.changed),p.observe(n,{childList:!0,subtree:!0}),h.observe(F,{childList:!0,subtree:!0}),v.debug("Setting up mutation observer",h))},bind:{events:function(){v.verbose("Binding visibility events to scroll and resize"),b.refreshOnLoad&&T.on("load"+k,v.event.load),T.on("resize"+k,v.event.resize),R.off("scroll"+k).on("scroll"+k,v.event.scroll).on("scrollchange"+k,v.event.scrollchange)}},event:{changed:function(e){v.verbose("DOM tree modified, updating visibility calculations"),v.timer=setTimeout(function(){v.verbose("DOM tree modified, updating sticky menu"),v.refresh()},100)},contextChanged:function(t){[].forEach.call(t,function(t){t.removedNodes&&[].forEach.call(t.removedNodes,function(t){(t==F||e(t).find(F).length>0)&&(v.debug("Element removed from DOM, tearing down events"),v.destroy())})})},resize:function(){v.debug("Window resized"),b.refreshOnResize&&E(v.refresh)},load:function(){v.debug("Page finished loading"),E(v.refresh)},scroll:function(){b.throttle?(clearTimeout(v.timer),v.timer=setTimeout(function(){R.triggerHandler("scrollchange"+k,[R.scrollTop()])},b.throttle)):E(function(){R.triggerHandler("scrollchange"+k,[R.scrollTop()])})},scrollchange:function(e,t){v.checkVisibility(t)}},precache:function(t,i){t instanceof Array||(t=[t]);for(var o=t.length,a=0,r=[],s=n.createElement("img"),l=function(){a++,a>=t.length&&e.isFunction(i)&&i()};o--;)s=n.createElement("img"),s.onload=l,s.onerror=l,s.src=t[o],r.push(s)},enableCallbacks:function(){v.debug("Allowing callbacks to occur"),O=!1},disableCallbacks:function(){v.debug("Disabling all callbacks temporarily"),O=!0},should:{trackChanges:function(){return d?(v.debug("One time query, no need to bind events"),!1):(v.debug("Callbacks being attached"),!0)}},setup:{cache:function(){v.cache={occurred:{},screen:{},element:{}}},image:function(){var e=A.data(w.src);e&&(v.verbose("Lazy loading image",e),b.once=!0,b.observeChanges=!1,b.onOnScreen=function(){v.debug("Image on screen",F),v.precache(e,function(){v.set.image(e,function(){g++,g==m&&b.onAllLoaded.call(this),b.onLoad.call(this)})})})},fixed:function(){v.debug("Setting up fixed"),b.once=!1,b.observeChanges=!1,b.initialCheck=!0,b.refreshOnLoad=!0,o.transition||(b.transition=!1),v.create.placeholder(),v.debug("Added placeholder",r),b.onTopPassed=function(){v.debug("Element passed, adding fixed position",A),v.show.placeholder(),v.set.fixed(),b.transition&&e.fn.transition!==i&&A.transition(b.transition,b.duration)},b.onTopPassedReverse=function(){v.debug("Element returned to position, removing fixed",A),v.hide.placeholder(),v.remove.fixed()}}},create:{placeholder:function(){v.verbose("Creating fixed position placeholder"),r=A.clone(!1).css("display","none").addClass(y.placeholder).insertAfter(A)}},show:{placeholder:function(){v.verbose("Showing placeholder"),r.css("display","block").css("visibility","hidden")}},hide:{placeholder:function(){v.verbose("Hiding placeholder"),r.css("display","none").css("visibility","")}},set:{fixed:function(){v.verbose("Setting element to fixed position"),A.addClass(y.fixed).css({position:"fixed",top:b.offset+"px",left:"auto",zIndex:b.zIndex}),b.onFixed.call(F)},image:function(t,n){if(A.attr("src",t),b.transition)if(e.fn.transition!==i){if(A.hasClass(y.visible))return void v.debug("Transition already occurred on this image, skipping animation");A.transition(b.transition,b.duration,n)}else A.fadeIn(b.duration,n);else A.show()}},is:{onScreen:function(){var e=v.get.elementCalculations();return e.onScreen},offScreen:function(){var e=v.get.elementCalculations();return e.offScreen},visible:function(){return v.cache&&v.cache.element?!(0===v.cache.element.width&&0===v.cache.element.offset.top):!1},verticallyScrollableContext:function(){var e=R.get(0)!==t?R.css("overflow-y"):!1;return"auto"==e||"scroll"==e},horizontallyScrollableContext:function(){var e=R.get(0)!==t?R.css("overflow-x"):!1;return"auto"==e||"scroll"==e}},refresh:function(){v.debug("Refreshing constants (width/height)"),"fixed"==b.type&&v.resetFixed(),v.reset(),v.save.position(),b.checkOnRefresh&&v.checkVisibility(),b.onRefresh.call(F)},resetFixed:function(){v.remove.fixed(),v.remove.occurred()},reset:function(){v.verbose("Resetting all cached values"),e.isPlainObject(v.cache)&&(v.cache.screen={},v.cache.element={})},checkVisibility:function(e){v.verbose("Checking visibility of element",v.cache.element),!O&&v.is.visible()&&(v.save.scroll(e),v.save.calculations(),v.passed(),v.passingReverse(),v.topVisibleReverse(),v.bottomVisibleReverse(),v.topPassedReverse(),v.bottomPassedReverse(),v.onScreen(),v.offScreen(),v.passing(),v.topVisible(),v.bottomVisible(),v.topPassed(),v.bottomPassed(),b.onUpdate&&b.onUpdate.call(F,v.get.elementCalculations()))},passed:function(t,n){var o=v.get.elementCalculations();if(t&&n)b.onPassed[t]=n;else{if(t!==i)return v.get.pixelsPassed(t)>o.pixelsPassed;o.passing&&e.each(b.onPassed,function(e,t){o.bottomVisible||o.pixelsPassed>v.get.pixelsPassed(e)?v.execute(t,e):b.once||v.remove.occurred(t)})}},onScreen:function(e){var t=v.get.elementCalculations(),n=e||b.onOnScreen,o="onScreen";return e&&(v.debug("Adding callback for onScreen",e),b.onOnScreen=e),t.onScreen?v.execute(n,o):b.once||v.remove.occurred(o),e!==i?t.onOnScreen:void 0},offScreen:function(e){var t=v.get.elementCalculations(),n=e||b.onOffScreen,o="offScreen";return e&&(v.debug("Adding callback for offScreen",e),b.onOffScreen=e),t.offScreen?v.execute(n,o):b.once||v.remove.occurred(o),e!==i?t.onOffScreen:void 0},passing:function(e){var t=v.get.elementCalculations(),n=e||b.onPassing,o="passing";return e&&(v.debug("Adding callback for passing",e),b.onPassing=e),t.passing?v.execute(n,o):b.once||v.remove.occurred(o),e!==i?t.passing:void 0},topVisible:function(e){var t=v.get.elementCalculations(),n=e||b.onTopVisible,o="topVisible";return e&&(v.debug("Adding callback for top visible",e),b.onTopVisible=e),t.topVisible?v.execute(n,o):b.once||v.remove.occurred(o),e===i?t.topVisible:void 0},bottomVisible:function(e){var t=v.get.elementCalculations(),n=e||b.onBottomVisible,o="bottomVisible";return e&&(v.debug("Adding callback for bottom visible",e),b.onBottomVisible=e),t.bottomVisible?v.execute(n,o):b.once||v.remove.occurred(o),e===i?t.bottomVisible:void 0},topPassed:function(e){var t=v.get.elementCalculations(),n=e||b.onTopPassed,o="topPassed";return e&&(v.debug("Adding callback for top passed",e),b.onTopPassed=e),t.topPassed?v.execute(n,o):b.once||v.remove.occurred(o),e===i?t.topPassed:void 0},bottomPassed:function(e){var t=v.get.elementCalculations(),n=e||b.onBottomPassed,o="bottomPassed";return e&&(v.debug("Adding callback for bottom passed",e),b.onBottomPassed=e),t.bottomPassed?v.execute(n,o):b.once||v.remove.occurred(o),e===i?t.bottomPassed:void 0},passingReverse:function(e){var t=v.get.elementCalculations(),n=e||b.onPassingReverse,o="passingReverse";return e&&(v.debug("Adding callback for passing reverse",e),b.onPassingReverse=e),t.passing?b.once||v.remove.occurred(o):v.get.occurred("passing")&&v.execute(n,o),e!==i?!t.passing:void 0},topVisibleReverse:function(e){var t=v.get.elementCalculations(),n=e||b.onTopVisibleReverse,o="topVisibleReverse";return e&&(v.debug("Adding callback for top visible reverse",e),b.onTopVisibleReverse=e),t.topVisible?b.once||v.remove.occurred(o):v.get.occurred("topVisible")&&v.execute(n,o),e===i?!t.topVisible:void 0},bottomVisibleReverse:function(e){var t=v.get.elementCalculations(),n=e||b.onBottomVisibleReverse,o="bottomVisibleReverse";return e&&(v.debug("Adding callback for bottom visible reverse",e),b.onBottomVisibleReverse=e),t.bottomVisible?b.once||v.remove.occurred(o):v.get.occurred("bottomVisible")&&v.execute(n,o),e===i?!t.bottomVisible:void 0},topPassedReverse:function(e){var t=v.get.elementCalculations(),n=e||b.onTopPassedReverse,o="topPassedReverse";return e&&(v.debug("Adding callback for top passed reverse",e),b.onTopPassedReverse=e),t.topPassed?b.once||v.remove.occurred(o):v.get.occurred("topPassed")&&v.execute(n,o),e===i?!t.onTopPassed:void 0},bottomPassedReverse:function(e){var t=v.get.elementCalculations(),n=e||b.onBottomPassedReverse,o="bottomPassedReverse";return e&&(v.debug("Adding callback for bottom passed reverse",e),b.onBottomPassedReverse=e),t.bottomPassed?b.once||v.remove.occurred(o):v.get.occurred("bottomPassed")&&v.execute(n,o),e===i?!t.bottomPassed:void 0},execute:function(e,t){var n=v.get.elementCalculations(),i=v.get.screenCalculations();e=e||!1,e&&(b.continuous?(v.debug("Callback being called continuously",t,n),e.call(F,n,i)):v.get.occurred(t)||(v.debug("Conditions met",t,n),e.call(F,n,i))),v.save.occurred(t)},remove:{fixed:function(){v.debug("Removing fixed position"),A.removeClass(y.fixed).css({position:"",top:"",left:"",zIndex:""}),b.onUnfixed.call(F)},placeholder:function(){v.debug("Removing placeholder content"),r&&r.remove()},occurred:function(e){if(e){var t=v.cache.occurred;t[e]!==i&&t[e]===!0&&(v.debug("Callback can now be called again",e),v.cache.occurred[e]=!1)}else v.cache.occurred={}}},save:{calculations:function(){v.verbose("Saving all calculations necessary to determine positioning"),v.save.direction(),v.save.screenCalculations(),v.save.elementCalculations()},occurred:function(e){e&&(v.cache.occurred[e]!==i&&v.cache.occurred[e]===!0||(v.verbose("Saving callback occurred",e),v.cache.occurred[e]=!0))},scroll:function(e){e=e+b.offset||R.scrollTop()+b.offset,v.cache.scroll=e},direction:function(){var e,t=v.get.scroll(),n=v.get.lastScroll();return e=t>n&&n?"down":n>t&&n?"up":"static",v.cache.direction=e,v.cache.direction},elementPosition:function(){var e=v.cache.element,t=v.get.screenSize();return v.verbose("Saving element position"),e.fits=e.height<t.height,e.offset=A.offset(),e.width=A.outerWidth(),e.height=A.outerHeight(),v.is.verticallyScrollableContext()&&(e.offset.top+=R.scrollTop()-R.offset().top),v.is.horizontallyScrollableContext()&&(e.offset.left+=R.scrollLeft-R.offset().left),v.cache.element=e,e},elementCalculations:function(){var e=v.get.screenCalculations(),t=v.get.elementPosition();return b.includeMargin?(t.margin={},t.margin.top=parseInt(A.css("margin-top"),10),t.margin.bottom=parseInt(A.css("margin-bottom"),10),t.top=t.offset.top-t.margin.top,t.bottom=t.offset.top+t.height+t.margin.bottom):(t.top=t.offset.top,t.bottom=t.offset.top+t.height),t.topPassed=e.top>=t.top,t.bottomPassed=e.top>=t.bottom,t.topVisible=e.bottom>=t.top&&!t.bottomPassed,t.bottomVisible=e.bottom>=t.bottom&&!t.topPassed,t.pixelsPassed=0,t.percentagePassed=0,t.onScreen=t.topVisible&&!t.bottomPassed,t.passing=t.topPassed&&!t.bottomPassed,t.offScreen=!t.onScreen,t.passing&&(t.pixelsPassed=e.top-t.top,t.percentagePassed=(e.top-t.top)/t.height),v.cache.element=t,v.verbose("Updated element calculations",t),t},screenCalculations:function(){var e=v.get.scroll();return v.save.direction(),v.cache.screen.top=e,v.cache.screen.bottom=e+v.cache.screen.height,v.cache.screen},screenSize:function(){v.verbose("Saving window position"),v.cache.screen={height:R.height()}},position:function(){v.save.screenSize(),v.save.elementPosition()}},get:{pixelsPassed:function(e){var t=v.get.elementCalculations();return e.search("%")>-1?t.height*(parseInt(e,10)/100):parseInt(e,10)},occurred:function(e){return v.cache.occurred!==i?v.cache.occurred[e]||!1:!1},direction:function(){return v.cache.direction===i&&v.save.direction(),v.cache.direction},elementPosition:function(){return v.cache.element===i&&v.save.elementPosition(),v.cache.element},elementCalculations:function(){return v.cache.element===i&&v.save.elementCalculations(),v.cache.element},screenCalculations:function(){return v.cache.screen===i&&v.save.screenCalculations(),v.cache.screen},screenSize:function(){return v.cache.screen===i&&v.save.screenSize(),v.cache.screen},scroll:function(){return v.cache.scroll===i&&v.save.scroll(),v.cache.scroll},lastScroll:function(){return v.cache.screen===i?(v.debug("First scroll event, no last scroll could be found"),!1):v.cache.screen.top}},setting:function(t,n){if(e.isPlainObject(t))e.extend(!0,b,t);else{if(n===i)return b[t];b[t]=n}},internal:function(t,n){if(e.isPlainObject(t))e.extend(!0,v,t);else{if(n===i)return v[t];v[t]=n}},debug:function(){!b.silent&&b.debug&&(b.performance?v.performance.log(arguments):(v.debug=Function.prototype.bind.call(console.info,console,b.name+":"),v.debug.apply(console,arguments)))},verbose:function(){!b.silent&&b.verbose&&b.debug&&(b.performance?v.performance.log(arguments):(v.verbose=Function.prototype.bind.call(console.info,console,b.name+":"),v.verbose.apply(console,arguments)))},error:function(){b.silent||(v.error=Function.prototype.bind.call(console.error,console,b.name+":"),v.error.apply(console,arguments))},performance:{log:function(e){var t,n,i;b.performance&&(t=(new Date).getTime(),i=l||t,n=t-i,l=t,c.push({Name:e[0],Arguments:[].slice.call(e,1)||"",Element:F,"Execution Time":n})),clearTimeout(v.performance.timer),v.performance.timer=setTimeout(v.performance.display,500)},display:function(){var t=b.name+":",n=0;l=!1,clearTimeout(v.performance.timer),e.each(c,function(e,t){n+=t["Execution Time"]}),t+=" "+n+"ms",s&&(t+=" '"+s+"'"),(console.group!==i||console.table!==i)&&c.length>0&&(console.groupCollapsed(t),console.table?console.table(c):e.each(c,function(e,t){console.log(t.Name+": "+t["Execution Time"]+"ms")}),console.groupEnd()),c=[]}},invoke:function(t,n,o){var r,s,l,c=P;return n=n||f,o=F||o,"string"==typeof t&&c!==i&&(t=t.split(/[\. ]/),r=t.length-1,e.each(t,function(n,o){var a=n!=r?o+t[n+1].charAt(0).toUpperCase()+t[n+1].slice(1):t;if(e.isPlainObject(c[a])&&n!=r)c=c[a];else{if(c[a]!==i)return s=c[a],!1;if(!e.isPlainObject(c[o])||n==r)return c[o]!==i?(s=c[o],!1):(v.error(C.method,t),!1);c=c[o]}})),e.isFunction(s)?l=s.apply(o,n):s!==i&&(l=s),e.isArray(a)?a.push(l):a!==i?a=[a,l]:l!==i&&(a=l),s}},d?(P===i&&v.initialize(),P.save.scroll(),P.save.calculations(),v.invoke(u)):(P!==i&&P.invoke("destroy"),v.initialize())}),a!==i?a:this},e.fn.visibility.settings={name:"Visibility",namespace:"visibility",debug:!1,verbose:!1,performance:!0,observeChanges:!0,initialCheck:!0,refreshOnLoad:!0,refreshOnResize:!0,checkOnRefresh:!0,once:!0,continuous:!1,offset:0,includeMargin:!1,context:t,throttle:!1,type:!1,zIndex:"10",transition:"fade in",duration:1e3,onPassed:{},onOnScreen:!1,onOffScreen:!1,onPassing:!1,onTopVisible:!1,onBottomVisible:!1,onTopPassed:!1,onBottomPassed:!1,onPassingReverse:!1,onTopVisibleReverse:!1,onBottomVisibleReverse:!1,onTopPassedReverse:!1,onBottomPassedReverse:!1,onLoad:function(){},onAllLoaded:function(){},onFixed:function(){},onUnfixed:function(){},onUpdate:!1,onRefresh:function(){},metadata:{src:"src"},className:{fixed:"fixed",placeholder:"placeholder",visible:"visible"},error:{method:"The method you called is not defined.",visible:"Element is hidden, you must call refresh after element becomes visible"}}}(jQuery,window,document);
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports) {
+
+module.exports = function(module) {
+	if(!module.webpackPolyfill) {
+		module.deprecate = function() {};
+		module.paths = [];
+		// module.parent = undefined by default
+		if(!module.children) module.children = [];
+		Object.defineProperty(module, "loaded", {
+			enumerable: true,
+			get: function() {
+				return module.l;
+			}
+		});
+		Object.defineProperty(module, "id", {
+			enumerable: true,
+			get: function() {
+				return module.i;
+			}
+		});
+		module.webpackPolyfill = 1;
+	}
+	return module;
+};
+
 
 /***/ })
 /******/ ]);
