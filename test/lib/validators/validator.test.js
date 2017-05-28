@@ -60,7 +60,7 @@ context('Validator', () => {
       return p.should.be.resolved;
     });
 
-    it('should read data from a local CSV', () => {
+    it.only('should read data from a local CSV', () => {
       const file = path.resolve(__dirname, 'data/program.csv');
       const stream = fs.createReadStream(file);
 
@@ -72,16 +72,17 @@ context('Validator', () => {
     it('should validate all resource types against the sample CSVs', (done) => {
 
       // get the available resource types
-      const types = Resources.types;
-
+      // const types = Resources.types;
+      const types = ['payment_accepted'];
       // go through the list
       async.map(types, (type, done) => {
         const file = path.resolve(__dirname, `data/${type}.csv`);
         const stream = fs.createReadStream(file);
 
         // validate the source against the schema
-        const p = new Validator(type).validate(stream);
-        p.then(() => done()).catch((err) => done(err));
+        new Validator(type).validate(stream)
+          .then(() => done())
+          .catch((err) => done(err));
       }, (err) => {
 
         done(err);

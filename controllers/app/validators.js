@@ -44,7 +44,7 @@ module.exports = function(server) {
   });
 
   server.route({
-    path: '/validators/validate',
+    path: '/validators/resources/validate',
     method: 'POST',
     config: {
 
@@ -56,9 +56,13 @@ module.exports = function(server) {
 
       handler(request, reply) {
 
+        // get the uploaded resource type
+        const type = request.payload.type;
+
+        // get the file stream
         const stream = request.payload.file;
 
-        const p = new Validator('contact').validate(stream)
+        const p = new Validator(type).validate(stream)
           .then(() => {
             console.log('success');
             reply();

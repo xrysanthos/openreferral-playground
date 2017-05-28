@@ -51,6 +51,7 @@
     "gulp-mocha": "^4.1.0",
     "gulp-release": "^1.1.1",
     "lab": "^13.0.1",
+    "mocha": "^3.4.2",
     "nodemon": "^1.11.0",
     "semantic-ui-css": "^2.2.10",
     "sinon": "^2.1.0",
@@ -62,6 +63,7 @@
   },
   "scripts": {
     "start": "NODE_ENV=dev nodemon --ignore js/ --ext js,html --exec babel-node --presets es2015,stage-2 server.js",
+    "debug": "NODE_ENV=dev nodemon --ignore js/ --ext js,html --exec babel-node --presets es2015,stage-2 --inspect server.js",
     "build": "webpack",
     "debug:ui": "webpack-dev-server --open",
     "build:dev": "webpack --env=dev --progress --profile --colors",

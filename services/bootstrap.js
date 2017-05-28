@@ -15,7 +15,7 @@ const Inert = require('inert');
 const Vision = require('vision');
 const hapiSwaggered = require('hapi-swaggered');
 const hapiSwaggeredUi = require('hapi-swaggered-ui');
-
+const handlebars = require('handlebars');
 
 module.exports = (function() {
 
@@ -29,30 +29,31 @@ module.exports = (function() {
    * Sets up the logging context
    */
   function _setupLogging(cb) {
-    if (typeof nconf.get().logging === 'undefined') {
-      return cb();
-    }
+
 
     /*
      * setup logging framework
      */
     log.info('Initializing logging framework');
 
-    // Console transport
-    if (typeof nconf.get().logging.console !== 'undefined') {
-      log.remove(log.transports.Console);
+    if (typeof nconf.get().logging !== 'undefined') {
 
-      log.add(log.transports.Console, {
-        level: nconf.get().logging.console.level,
-        colorize: true
-      });
 
-      log.info('\tAdded Console transport');
+      // Console transport
+      if (typeof nconf.get().logging.console !== 'undefined') {
+        log.remove(log.transports.Console);
+
+        log.add(log.transports.Console, {
+          level: nconf.get().logging.console.level,
+          colorize: true
+        });
+
+        log.info('\tAdded Console transport');
+      }
+
     }
 
-    if (cb) {
-      cb();
-    }
+    setImmediate(cb);
   }
 
   /**
@@ -96,7 +97,7 @@ module.exports = (function() {
             // views configuration
             _server.views({
               engines: {
-                html: require('handlebars')
+                html: handlebars
               },
               relativeTo: `${__dirname}/..`,
               path: 'views',
@@ -275,14 +276,14 @@ module.exports = (function() {
 
         if (err) {
           console.error(err);
-          return process.exit(1);
+          process.exit(1);
+        } else {
+          log.info('Server running at:', _server.info.uri);
+          _initialized = true;
+
+          // done
+          cb();
         }
-
-        log.info('Server running at:', _server.info.uri);
-        _initialized = true;
-
-        // done
-        cb();
       });
 
 

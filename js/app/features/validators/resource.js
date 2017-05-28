@@ -71,10 +71,19 @@ import '../../base';
       .tab();
 
     const opts = {
-      url: '/validators/validate',
+      url: '/validators/resources/validate',
       acceptedFiles: '.csv'
     };
-    $('#csv-upload').dropzone(opts);
+
+    // create the dropzone instance
+    const dzone = new Dropzone('#csv-upload', opts);
+
+    // set some extra form data before
+    // uploading the file
+    dzone.on('sending', (file, xhr, form) => {
+      const type = $('.item.resource.active').attr('data-name');
+      form.set('type', type);
+    });
   };
 
   /**

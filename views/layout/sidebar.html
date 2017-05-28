@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
 
   <link rel="stylesheet" type="text/css" href="/static/dist/styles.css">
+  <link rel="shortcut icon" href="/static/assets/logos/green.png" type="image/png">
 
   <script src="/static/dist/base.bundle.js"></script>
 
@@ -13,20 +14,47 @@
 
 <body>
 
-  <div class="ui sidebar inverted vertical menu visible">
 
+  <div class="ui vertical inverted sidebar menu left" id="toc">
     {{>menu}}
-
   </div>
+
+
+  <div class="ui fixed inverted main menu">
+    <div class="ui container">
+      <a class="launch icon item">
+        <i class="content icon"></i>
+      </a>
+
+        <div class="item">
+          Getting Started
+        </div>
+
+    </div>
+  </div>
+
   <div class="pusher">
 
+    <div class="full height">
 
-    <div class="main ui container">
-
-      <div class="article">
-      {{{content}}}
+      <div class="toc">
+        <div class="ui vertical inverted menu">
+          {{>menu}}
+        </div>
       </div>
 
+      <div class="article">
+
+        <div class="main intro container">
+        {{{content}}}
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="ui black inverted vertical footer segment">
+      {{>footer}}
     </div>
 
   </div>
