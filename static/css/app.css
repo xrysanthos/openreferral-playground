@@ -8,6 +8,14 @@
 }
 
 
+/*
+ * Dropzone
+ */
+.dropzone {
+  background: none!important;
+  border: none!important;
+}
+
 
 /*----------------
       Footer

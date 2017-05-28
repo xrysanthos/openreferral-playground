@@ -1,14 +1,14 @@
 <h1 class="ui header">
   Validate resources
+
   <div class="sub header">
     Validate Open Referral resources
-    individually against the official
-    specification.
+    against the official specification.
   </div>
 </h1>
 
 <div class="ui three ordered steps">
-  <div class="active step">
+  <div class="step">
     <div class="content">
       <div class="title">Resource selection</div>
       <div class="description">Select a resource definition from the menu</div>
@@ -29,65 +29,63 @@
 </div>
 
 
-<div class="ui menu">
-  <a class="browse item">
-    Select a resource
-    <i class="dropdown icon"></i>
-  </a>
-  <div class="ui fluid popup bottom left transition hidden resources">
-    <div class="ui three column relaxed divided grid">
-      <div class="column">
-        <div class="ui link list">
-          {{#each resources.[0]}}
-          <a class="item resource" data-name="{{this.name}}" title="{{this.description}}">{{this.title}}</a> {{/each}}
+<div class="ui segments">
+
+  <div class="ui menu top attached">
+    <a class="browse item">
+      Select a resource
+      <i class="dropdown icon"></i>
+    </a>
+    <div class="ui fluid popup bottom left transition hidden resources">
+      <div class="ui three column relaxed divided grid">
+        <div class="column">
+          <div class="ui link list">
+            {{#each resources.[0]}}
+            <a class="item resource" data-name="{{this.name}}" title="{{this.description}}">{{this.title}}</a> {{/each}}
+          </div>
         </div>
-      </div>
-      <div class="column">
-        <div class="ui link list">
-          {{#each resources.[1]}}
-          <a class="item resource" data-name="{{this.name}}" title="{{this.description}}">{{this.title}}</a> {{/each}}
+        <div class="column">
+          <div class="ui link list">
+            {{#each resources.[1]}}
+            <a class="item resource" data-name="{{this.name}}" title="{{this.description}}">{{this.title}}</a> {{/each}}
+          </div>
         </div>
-      </div>
-      <div class="column">
-        <div class="ui link list">
-          {{#each resources.[2]}}
-          <a class="item resource" data-name="{{this.name}}" title="{{this.description}}">{{this.title}}</a> {{/each}}
+        <div class="column">
+          <div class="ui link list">
+            {{#each resources.[2]}}
+            <a class="item resource" data-name="{{this.name}}" title="{{this.description}}">{{this.title}}</a> {{/each}}
+          </div>
         </div>
       </div>
     </div>
-  </div>
 
-
-</div>
-
-
-<div class="ui top attached tabular menu">
-  <a class="item active" data-tab="schema">Schema</a>
-  <a class="item" data-tab="csv">Upload sample data</a>
-</div>
-<div class="ui bottom attached tab segment active resource-contents" data-tab="schema">
-  <img class="ui wireframe image" src="/static/assets/images/paragraph.png">
-</div>
-<div class="ui bottom attached tab segment" data-tab="csv">
-
-  <div class="ui">
-    <form action="/upload" class="dropzone" id="csv-upload">
-
-      <div class="dz-message needsclick">
-        <h2 class="ui center aligned icon header">
-          <i class="circular icon upload"></i>
-          Drop a sample CSV in here
-        </h2>
-
-        <img class="ui wireframe image centered" src="/static/assets/images/short-paragraph.png">
-
-      </div>
-    </form>
 
   </div>
 
+  <div class="ui segment resource-contents">
 
+    <img class="ui wireframe image" src="/static/assets/images/paragraph.png">
+
+  </div>
+  <div class="ui secondary segment">
+
+    <div class="ui">
+      <form action="/upload" class="dropzone" id="csv-upload">
+
+        <div class="dz-message needsclick">
+          <h2 class="ui center aligned icon header">
+            <i class="circular icon upload"></i>
+            Drop a sample CSV in here
+          </h2>
+
+          <img class="ui wireframe image centered" src="/static/assets/images/short-paragraph.png">
+
+        </div>
+      </form>
+
+    </div>
+
+  </div>
 </div>
-
 
 <script src="/static/dist/validators-resource.bundle.js"></script>
