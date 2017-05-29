@@ -12270,6 +12270,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 {
 
+  const $view = $('#view-resources');
+
+  let selectedResource = null;
+
   /**
    * Initializes the view.
    * @return {[type]} [description]
@@ -12277,18 +12281,17 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
   const onReady = function() {
 
     // selector cache
-    const
-      $dropdownItem = $('.menu .dropdown .item'),
-      $popupItem = $('.popup.example .browse.item'),
-      $menuItem = $('.menu a.item, .menu .link.item').not($dropdownItem),
-      $dropdown = $('.menu .ui.dropdown');
+    const $menuItem = $('.link .item.resource', $view);
+    const $dropdown = $('.menu .ui.dropdown', $view);
+    const $resources = $('.resources.item', $view);
+    const $resource = $('.link.list .item', $view);
 
     $dropdown
       .dropdown({
         on: 'hover'
       });
 
-    $('.main.container .ui.search')
+    $('.main.container .ui.search', $view)
       .search({
         type: 'category',
         apiSettings: {
@@ -12296,33 +12299,22 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         }
       });
 
-    $('.browse.item')
-      .popup({
-        popup: '.resources.popup',
-        hoverable: true,
-        position: 'bottom left',
-        delay: {
-          show: 200,
-          hide: 400
-        }
-      });
+    $resources.popup({
+      popup: '.resources.popup',
+      hoverable: true,
+      position: 'bottom left',
+      delay: {
+        show: 200,
+        hide: 400
+      }
+    });
 
-    $popupItem
-      .popup({
-        inline: true,
-        hoverable: true,
-        popup: '.fluid.popup',
-        position: 'bottom left',
-        delay: {
-          show: 100,
-          hide: 100
-        }
-      });
-
+    // user selected a resource type
     $menuItem
       .on('click', onResourceSelected);
 
-    $('.link.list .item').api({
+    // fetches resource schema
+    $resource.api({
       action: 'get resource',
       urlData: {
         name: $(this).attr('data-name')
@@ -12330,6 +12322,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       dataType: 'html',
       onSuccess(response) {
         $('.ui.resource-contents').html(response);
+        $('.resources.item').popup('hide');
       }
     });
 
@@ -12348,7 +12341,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     // set some extra form data before
     // uploading the file
     dzone.on('sending', (file, xhr, form) => {
-      const type = $('.item.resource.active').attr('data-name');
+      const type = $('.item.resource.active', $view).attr('data-name');
       form.set('type', type);
     });
   };
@@ -12358,6 +12351,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
    * @return {[type]} [description]
    */
   const onResourceSelected = function() {
+
+    selectedResource = $(this).attr('data-name');
+
+    // set the link on the 'download sample csv' button
+    $('.download-sample', $view)
+      .attr('href', `/static/data/samples/${selectedResource}.csv`)
+      .removeClass('disabled');
+
 
     if (!$(this).hasClass('dropdown browse')) {
       $(this)

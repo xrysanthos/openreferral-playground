@@ -61,6 +61,8 @@ module.exports = function(server) {
           // with full meta data
           const resource = Resources.getDefinition(name, true);
 
+          console.log(resource.schema.primaryKey);
+
           if (_.startsWith(request.headers.accept, 'text/html')) {
             // HTML template
             reply.view('partials/features/validators/resource-definition', resource, {layout: 'partial'});
