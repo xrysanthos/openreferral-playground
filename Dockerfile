@@ -2,10 +2,16 @@
 FROM node:7-slim
 
 ADD package.json /tmp/package.json
-RUN cd /tmp && npm install --production
 
 # Create the root application directory
-RUN mkdir /app && cp -a /tmp/node_modules /app/
+RUN mkdir /app
+
+COPY . /app
+
+RUN node --version
+
+# Install app dependencies
+RUN cd app && npm install
 
 # Set the work directory
 WORKDIR /app
