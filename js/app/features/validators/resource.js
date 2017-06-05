@@ -56,6 +56,13 @@ import '../../base';
       onSuccess(response) {
         $('.ui.resource-contents').html(response);
         $('.resources.item').popup('hide');
+
+        $('.foreign-key').on('click', (e) => {
+          const resource = $(e.target).attr('data-resource');
+
+          // open the selected resource
+          $(`.item.resource[data-name='${resource}']`).trigger('click');
+        });
       }
     });
 
@@ -101,6 +108,8 @@ import '../../base';
         .not($(this))
         .removeClass('active');
     }
+
+
   };
 
 
