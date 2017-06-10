@@ -9,7 +9,7 @@
     <tr>
       <th class="three wide">Field</th>
       <th>Type</th>
-      <th class="three wide">Links</th>
+      <th class="three wide">Foreign keys</th>
       <th class="four wide">Description</th>
       <th>Format</th>
       <th>Required</th>
@@ -21,10 +21,10 @@
     {{#each this.schema.fields}}
     <tr>
       <td style="word-break: break-all;">
-        {{#if this.keys.primary}}
-          <i class="medium yellow key icon"></i>
-        {{/if}}
         {{this.name}}
+        {{#if this.keys.primary}}
+        <i class="icon yellow key" data-content="Primary key"></i>
+        {{/if}}
       </td>
       <td>
         <div class="ui horizontal label">{{this.type}}</div>

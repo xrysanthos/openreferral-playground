@@ -12330,6 +12330,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
           // open the selected resource
           $(`.item.resource[data-name='${resource}']`).trigger('click');
         });
+
+        $('.ui.table i')
+          .popup();
       }
     });
 

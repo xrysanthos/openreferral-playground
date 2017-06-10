@@ -63,6 +63,9 @@ import '../../base';
           // open the selected resource
           $(`.item.resource[data-name='${resource}']`).trigger('click');
         });
+
+        $('.ui.table i')
+          .popup();
       }
     });
 
