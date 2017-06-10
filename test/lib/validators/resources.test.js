@@ -5,9 +5,6 @@ const {
   Resources
 } = require('../../../lib/validators/resources');
 
-const {
-  RESOURCE_TYPES
-} = require('../../../lib/validators/constants');
 
 context('Resources class', () => {
 
@@ -25,9 +22,10 @@ context('Resources class', () => {
   context('getDefinitions()', () => {
 
     it('should return all resource type definitions with schema', () => {
+      const types = Resources.types;
       const resources = Resources.getDefinitions(true);
       should.exist(resources);
-      resources.should.have.length(RESOURCE_TYPES.length);
+      resources.should.have.length(types.length);
       resources[0].should.have.all.keys('name', 'path', 'description',
       'format', 'mediatype', 'schema');
     });

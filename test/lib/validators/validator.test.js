@@ -1,9 +1,11 @@
 const fs = require('fs');
 const path = require('path');
-const async = require('async');
 const chai = require('chai');
-const should = chai.should();
+const sinon = require('sinon');
+const SinonChai = require('sinon-chai');
 const chaiAsPromised = require('chai-as-promised');
+const should = chai.should();
+chai.use(SinonChai);
 chai.use(chaiAsPromised);
 
 
@@ -11,16 +13,20 @@ const {
   Validator
 } = require('../../../lib/validators/validator');
 
-const {
-  Resources
-} = require('../../../lib/validators/resources');
 
 const {
   UnsupportedValidatorError
 } = require('../../../lib/validators/errors');
 
+const sandbox = sinon.sandbox.create();
 
 context('Validator', () => {
+
+  afterEach(() => {
+    // completely restore all fakes created through the sandbox
+    sandbox.restore();
+  });
+
 
   context('constructor()', () => {
 
@@ -57,40 +63,19 @@ context('Validator', () => {
 
       // validate the source against the schema
       const p = new Validator('program').validate(data);
-      return p.should.be.resolved;
+      return p.should.be.fulfilled;
     });
 
-    it.only('should read data from a local CSV', () => {
-      const file = path.resolve(__dirname, 'data/program.csv');
+    it('should read data from a local CSV', () => {
+      const file = path.resolve(__dirname, 'samples/program.csv');
       const stream = fs.createReadStream(file);
 
       // validate the source against the schema
       const p = new Validator('program').validate(stream);
-      return p.should.be.resolved;
+      return p.should.be.fulfilled;
     });
 
-    it('should validate all resource types against the sample CSVs', (done) => {
-
-      // get the available resource types
-      // const types = Resources.types;
-      const types = ['payment_accepted'];
-      // go through the list
-      async.map(types, (type, done) => {
-        const file = path.resolve(__dirname, `data/${type}.csv`);
-        const stream = fs.createReadStream(file);
-
-        // validate the source against the schema
-        new Validator(type).validate(stream)
-          .then(() => done())
-          .catch((err) => done(err));
-      }, (err) => {
-
-        done(err);
-      });
-
-    });
 
   });
-
 
 });

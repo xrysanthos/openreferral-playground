@@ -67,7 +67,8 @@
     "build": "webpack",
     "debug:ui": "webpack-dev-server --open",
     "build:dev": "webpack --env=dev --progress --profile --colors",
-    "build:dist": "webpack --env=prod --progress --profile --colors"
+    "build:dist": "webpack --env=prod --progress --profile --colors",
+    "test": "mocha --recursive --require babel-register --colors test/"
   },
   "main": "server.js",
   "author": "Chris Spilio",
