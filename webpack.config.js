@@ -6,7 +6,7 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 let webpackConfig = {
 
-  context: path.resolve(__dirname, 'js'),
+  context: path.resolve(__dirname, 'src/js'),
 
   entry: {
     base: './app/base.js',
@@ -15,12 +15,12 @@ let webpackConfig = {
   },
 
   output: {
-    path: path.resolve(__dirname, 'static/dist/'),
+    path: path.resolve(__dirname, 'src/static/dist/'),
     filename: '[name].bundle.js'
   },
 
   devServer: {
-    contentBase: path.join(__dirname, '/'),
+    contentBase: path.join(__dirname, 'src//'),
     port: 8080
   },
 

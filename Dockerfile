@@ -14,7 +14,7 @@ RUN node --version
 RUN cd app && npm install
 
 # Set the work directory
-WORKDIR /app
+WORKDIR /app/src
 
 # Expose the port
 EXPOSE 8080

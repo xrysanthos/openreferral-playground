@@ -3,7 +3,7 @@ const should = chai.should();
 
 const {
   Resources
-} = require('../../../lib/validators/resources');
+} = require('../../../src/lib/validators/resources');
 
 
 context('Resources class', () => {

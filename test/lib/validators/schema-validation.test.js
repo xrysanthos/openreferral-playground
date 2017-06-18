@@ -8,7 +8,7 @@ chai.use(chaiAsPromised);
 
 const {
   Validator
-} = require('../../../lib/validators/validator');
+} = require('../../../src/lib/validators/validator');
 
 const sandbox = sinon.sandbox.create();
 

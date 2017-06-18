@@ -11,13 +11,13 @@ chai.use(chaiAsPromised);
 
 const {
   Validator
-} = require('../../../lib/validators/validator');
+} = require('../../../src/lib/validators/validator');
 
 
 const {
   UnsupportedValidatorError,
   DataValidationError
-} = require('../../../lib/validators/errors');
+} = require('../../../src/lib/validators/errors');
 
 const sandbox = sinon.sandbox.create();
 
