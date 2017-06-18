@@ -78,7 +78,7 @@ export class Validator {
           throw new Error('No schema found for validating this type of resource');
         }
 
-        let idx = 0;
+        let idx = 1;
 
         // create a new table instance
         // using the selected resource

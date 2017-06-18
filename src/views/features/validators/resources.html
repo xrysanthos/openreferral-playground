@@ -10,19 +10,19 @@
   </h1>
 
   <div class="ui three ordered steps">
-    <div class="step">
+    <div class="step select">
       <div class="content">
         <div class="title">Resource selection</div>
         <div class="description">Select a resource definition from the menu</div>
       </div>
     </div>
-    <div class="step">
+    <div class="step upload">
       <div class="content">
         <div class="title">Upload sample data</div>
         <div class="description">Upload a CSV file with sample data</div>
       </div>
     </div>
-    <div class="step">
+    <div class="step validate">
       <div class="content">
         <div class="title">Validation</div>
         <div class="description">Sample data will be checked against the resource specification</div>
@@ -75,7 +75,7 @@
       <img class="ui wireframe image" src="/static/assets/images/paragraph.png">
 
     </div>
-    <div class="ui secondary segment">
+    <div class="ui secondary segment dimmable">
 
       <div class="ui">
         <form action="/upload" class="dropzone" id="csv-upload">
@@ -91,9 +91,23 @@
 
       </div>
 
+      <div class="ui dimmer transition hidden">
+        <div class="content">
+          <div class="center">
+            <h3 class="ui inverted icon header">
+              <i class="checkmark icon"></i>
+              <span></span>
+            </h3>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 
 </div>
+
+
+
 
 <script src="/static/dist/validators-resource.bundle.js"></script>

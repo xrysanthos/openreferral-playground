@@ -5,7 +5,7 @@
  */
 
 const _ = require('lodash');
-const fs = require('fs');
+const Boom = require('boom');
 const Resources = require('../../lib/validators/resources').Resources;
 const Validator = require('../../lib/validators/validator').Validator;
 
@@ -62,17 +62,13 @@ module.exports = function(server) {
         // get the file stream
         const stream = request.payload.file;
 
-        const p = new Validator(type).validate(stream)
+        new Validator(type).validate(stream)
           .then(() => {
-            console.log('success');
             reply();
           })
           .catch((e) => {
-            console.error(e.message);
-            reply(e);
+            reply(Boom.badRequest(e));
           });
-
-
       }
     }
   });

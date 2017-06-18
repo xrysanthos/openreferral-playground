@@ -46,6 +46,44 @@ import '../../base';
     $menuItem
       .on('click', onResourceSelected);
 
+      // initialize the tab
+    $('.menu .item')
+        .tab();
+
+    const opts = {
+      url: '/validators/resources/validate',
+      acceptedFiles: '.csv'
+    };
+
+      // create the dropzone instance
+    const dzone = new Dropzone('#csv-upload', opts);
+    dzone.disable();
+
+      // set some extra form data before
+      // uploading the file
+    dzone.on('sending', (file, xhr, form) => {
+      const type = $('.item.resource.active', $view).attr('data-name');
+      form.set('type', type);
+    });
+
+    dzone.on('error', (file, error) => {
+
+      $('.ui.dimmer .icon').removeClass('checkmark green').addClass('bug red');
+      $('.ui.dimmer span').text(`${error.message}`);
+      $('.ui.dimmable').dimmer('show');
+    });
+
+    dzone.on('success', (file) => {
+
+      $('.ui.dimmer .icon').removeClass('bug red').addClass('checkmark green');
+      $('.ui.dimmer span').text(`Success! File '${file.name}' is valid.`);
+      $('.ui.dimmable').dimmer('show');
+    });
+
+    $('.ui.dimmable').dimmer({
+      closeable: true
+    });
+
     // fetches resource schema
     $resource.api({
       action: 'get resource',
@@ -66,26 +104,12 @@ import '../../base';
 
         $('.ui.table i')
           .popup();
+
+        // enable and clear the dzone
+        dzone.enable();
+        dzone.removeAllFiles();
+        $('.ui.dimmable').dimmer('hide');
       }
-    });
-
-    // initialize the tab
-    $('.menu .item')
-      .tab();
-
-    const opts = {
-      url: '/validators/resources/validate',
-      acceptedFiles: '.csv'
-    };
-
-    // create the dropzone instance
-    const dzone = new Dropzone('#csv-upload', opts);
-
-    // set some extra form data before
-    // uploading the file
-    dzone.on('sending', (file, xhr, form) => {
-      const type = $('.item.resource.active', $view).attr('data-name');
-      form.set('type', type);
     });
   };
 
